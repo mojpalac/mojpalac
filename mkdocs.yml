@@ -1,1 +1,6 @@
-site_name: My Docs
+site_name: MkLorym
+site_url: https://mojpalac.github.io/
+nav:
+    - Home: index.md
+    - Books: books.md
+theme: readthedocs
