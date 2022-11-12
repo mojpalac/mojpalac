@@ -4,3 +4,6 @@ nav:
     - Home: index.md
     - Books: books.md
 theme: readthedocs
+plugins:
+  - literate-nav:
+      nav_file: summary.md
