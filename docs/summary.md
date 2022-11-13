@@ -1,2 +1,2 @@
 * [Books](books.md)
-* [Books2](/mojpalac/books)
+* [Books2](/books)

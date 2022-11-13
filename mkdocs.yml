@@ -1,8 +1,4 @@
-site_name: MkLorym
-site_url: https://mojpalac.github.io/
-nav:
-    - Home: index.md
-    - Books: books.md
+site_name: MojPalac
 theme: readthedocs
 plugins:
   - literate-nav:
