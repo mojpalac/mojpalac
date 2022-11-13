@@ -1,5 +1,6 @@
 site_name: MojPalac
 theme: readthedocs
 plugins:
+  - search
   - literate-nav:
       nav_file: summary.md
