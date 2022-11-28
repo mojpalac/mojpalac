@@ -14,4 +14,5 @@ jobs:
       - run: pip install 
                 mkdocs-material
                 mkdocs-literate-nav
+                mkdocs-mermaid2-plugin
       - run: mkdocs gh-deploy --force
