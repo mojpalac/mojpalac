@@ -4,3 +4,7 @@ plugins:
   - search
   - literate-nav:
       nav_file: summary.md
+  - mermaid2:
+
+extra_javascript:
+  - https://unpkg.com/mermaid/dist/mermaid.min.js
