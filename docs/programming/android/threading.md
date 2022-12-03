@@ -70,3 +70,22 @@ Difference between `Looper.getMainLopper().post()` and `runOnUiThread()`:
 - `post()` is adding a block to execute to a queue which means the block will be executed in future
 - `runOnUiThread()` - if current thread is Main it will immediately execute code,
   otherwise it will fall back to `post()`
+
+### MemoryLeak
+
+``` java
+lateinit var leakingObject: LeakingObject 
+
+override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    leakingObject = LeakingObject(view)
+}
+```
+
+It's leaking because every time on new assignment to LeakingObject,
+the old one will be held in memory without assignment as Long as it's attached to the root
+
+Each application can ask the system about how much memory is available for it by calling: getMemoryClass()
+Foreground application are less likely to be killed by system
+
+If application is Least-Recently-Used (so it's not in foreground, but in recently used) and system is running out of
+memory then it's starts killing from bot-to-top but also checks which takes the most memory and might kill it

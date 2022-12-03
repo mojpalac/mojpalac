@@ -1,21 +1,3 @@
-
-### MemoryLeak
-
-``` java
-lateinit var leakingObject: LeakingObject 
-
-override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    leakingObject = LeakingObject(view)
-}
-```
-It's leaking because every time on new assignment to LeakingObject, the old one will be hold in memory without assignment as Long as it's attached to the root
-
-Each application can ask the system about how much memory is available for it by calling: getMemoryClass()
-Foreground application are less likely to be killed by system
-
-If application is Least-Recently-Used (so it's not in foreground, but in recently used) and system is running out of memory then it's starts killing from bot-to-top but also checks which takes the most memory and might kill it
-
-
 ### Activity vs Fragment
 
 "You may want to consider using the new Fragment APIs to replace this arbitrary stack of activities with a single activity that more tightly manages its memory. For example if you use the back stack facilities of fragments, when a fragment goes on the back stack and is no longer visible, its onDestroyView() method is called to completely remove its view hierarchy, greatly reducing its footprint.

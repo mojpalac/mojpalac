@@ -18,16 +18,3 @@ by Delegates.notNull() // will throw IllegalStateException if not initilized"
 ```
 by Lazy allows to also to initialize values, which can allow to omit NPE in case when fe. object is inside sealed class that takes value like: object: Tree: Plant("green")
 
-
-### coroutines
-
-are:
-asynchronous - musisz czekac na rezultat
-non-blocking - nie blokuje UI threada
-sequentional code - nie musisz miec callbackow
-
-suspend - key word for coroutines - czeka az coroutine zwroci wynik, ale inna praca moze sie wykonywac
-Coroutine needs:
-- Job - cancellable object with lifecycle that complets
-- Dispatcher - sends coroutines to different threads (like rx java) scheduleOn()
-- Scope - combines informations including Job and Dispatcher - tworzenie CoroutineScope(Dispatcher + job)

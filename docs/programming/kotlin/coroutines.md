@@ -1,6 +1,16 @@
 # Coroutines
 
-Each coroutine has a job associated with it.
+are:
+asynchronous - you have to wait for result
+non-blocking - it doesn't block the thread
+sequential code - no callback are required
+
+`suspend` - key word for coroutines - waits until job will return, though different work can be processed on same thread
+Coroutine needs:
+- `Job` - cancellable object with lifecycle that completes
+- `Dispatcher` - sends coroutines to different threads (like rx java) scheduleOn()
+- `Scope` - combines information including Job and Dispatcher. Creation: `CoroutineScope(dispatcher + job)`
+
 Job is just a representation of coroutine. There is no coroutine without job.
 
 Coroutine scopes are just boxes in which coroutines run (wrapper around `CoroutineContext`).
