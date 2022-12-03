@@ -1,6 +1,4 @@
-
 ## Threading
-
 
 ### CPU Operations basics
 
@@ -8,6 +6,7 @@
 graph LR
 A["send instruction from system"]--"1000 1001 1101 1000"-->  B["CPU"]
 ```
+
 "Move the content of register (CPU internal storage) BX into register AX"
 
 ``` mermaid
@@ -19,6 +18,7 @@ B --> C["Memory"] & D["I/O devices"]
 **System** = CPU + Operating System
 
 #### Single-Tasking system
+
 execute the machine code of one single task until the task terminates.
 It's not used in most popular systems.
 
@@ -30,6 +30,7 @@ subgraph PC
 i1
 end
 ```
+
 - i0 - instruction
 - PC, program counter - moves from one instruction to another
 
@@ -55,6 +56,7 @@ pc--5-->i2
 pc--6-->j2
 end
 ```
+
 ```mermaid
 graph LR
 
@@ -63,22 +65,26 @@ i0 --> i1 --yield--> j0 -->j1--yield--> i2 --yield--> j2 -->...
 end
 ```
 
-**yielding** - releasing the CPU by the task. It allows other task to start using the CPU 
+**yielding** - releasing the CPU by the task. It allows other task to start using the CPU
 
 Pros:
+
 - allows concurrent execution of multiple tasks as yieldingly can happen thousands of ime on one second.
-Cons:
+  Cons:
 - one misbehaving task can claim resources for long time thus making the entire system unresponsive
 
 #### Preemptive multitasking system
+
 Similar to cooperative, but it's Operating system that is responsible for yielding the tasks based on algorithm
 Pros:
+
 - allows concurrent tasks
 - guarantees system responsiveness
-cons:
+  cons:
 - very complex system in the terms of creation. Used by majority of general purpose Operating Systems e.g. Android
 
 ### Multiprocessing system
+
 System with more than one CPU
 
 ``` mermaid
@@ -101,12 +107,16 @@ parallelism
 end
 ```
 
+## Multithreading
+
+decomposition of app logic into multiple concurrent tasks
+
 concurrency - tasks <u>appear</u> to run at the same time
 parallelism - tasks to at the same time
 
 ### I. Visibility problem
 
-Having 2 threads, system can decide that particular thread don't need to access filed from memory, 
+Having 2 threads, system can decide that particular thread don't need to access filed from memory,
 rather it can use value from cache. System does it for performance improvements.
 This can lead to situation where another thread is updating the value of the filed
 but first thread is not reading updating value but reads value from cache.
@@ -140,23 +150,25 @@ all others threads have to wait, but it does not guarantee that thread will not 
 `volatile` && `final` keywords in java makes sure that thread will read and write value from memory.
 **Though it doesn't solve the atomicity problem**
 
-`synchronized` - allows to handle "race condition". 
+`synchronized` - allows to handle "race condition".
 In case of "race condition" you are not guarantee the order in which particular statements will be run.
 When 2 threads are having `synchronized`even when the order will be changed,
 you are guaranteed that once the thread no. 1 finishes execution on synchronised
 only then thread no. 2 will be able to execute the code.
-Metaphor - taking stick only the one that is currently holding the stick is able to talk, 
-all the others have to wait. This is exactly the `Lock` "monitor" object. 
+Metaphor - taking stick only the one that is currently holding the stick is able to talk,
+all the others have to wait. This is exactly the `Lock` "monitor" object.
 Only one thread at a time can hold it: `synchronized` (Lock)<br>
 
 Pros and cons of `synchronized`:
+
 - Guarantees atomicity and visibility
 - it's very complex, and it's easy to make a mistake
 - performance as it blocks other threads, though it's not always significant
-(depends on the environment not really important on Android)
+  (depends on the environment not really important on Android)
 - -/+ it does not guarantee who will be next holder of monitor (it can be same thread)
 
 ### Happens-Before
+
 If 2 actions can have happens-before relationships if:
 First action happens before second and first visible and ordered before second action
 It is lower level concept than "visibility".
@@ -168,18 +180,20 @@ In reality there is no guarantee of sequence when we have multithreading.
 Compilers, JVM or CPU can reorder sequence, unless we define the constraints e.g. happens-before.
 
 Rule:
+
 1. if only 1 thread then order in code will be respected
 2. if action `x` synchronizes* with action `y`
 3. Everything before `thread.start()` is visible for thread.
 
-* - includes: `synchronized` keyword, read and write `volatile`s, `java.util.concurrent`
+*
+    - includes: `synchronized` keyword, read and write `volatile`s, `java.util.concurrent`
 
 If we have `volatile` filed (which guarantees that thread will read value from memory)
 and later call to `thread.start()` we have happens-before relation.
 Therefore, thread will always be checking for the value of the variable in the memory.
 
-
 ### Garbage Collector, GC**
+
 System process which automatically reclaims memory by discarding objects
 that are no longer in use (not reachable)
 
@@ -211,6 +225,7 @@ Garbage Collector is able to recognize circular reference and knows that both ob
 hence it will release memory for myObject1 and myObjet2
 
 ### Memory Leaks
+
 object that is no longer used but can't be Garbage Collected
 
 **Roots** - object which are always consider by GC as reachable thus never cleaned by GC
