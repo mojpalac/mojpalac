@@ -31,9 +31,9 @@ The Law of Demeter -> function talk only to friends
 empty objects over null
 
 
-|                                     Do                                     	|                                 Don't                                	|
-|:--------------------------------------------------------------------------:	|:--------------------------------------------------------------------:	|
-| ``` java Complex   fulcrumPoint  =  Complex . FromRealNumber ( 23.0 ); ``` 	| ``` java      Complex   fulcrumPoint  =  new   Complex ( 23.0 ); ``` 	|
+|                   Do                                     	                   |                 Don't                                	                 |
+|:----------------------------------------------------------------------------:|:----------------------------------------------------------------------:|
+| ``` java Complex   fulcrumPoint  =  Complex . FromRealNumber ( 23.0 ); ``` 	 | ``` java      Complex   fulcrumPoint  =  new   Complex ( 23.0 ); ``` 	 |
 
 
 Flow should be used for communication between Repo and ViewModel

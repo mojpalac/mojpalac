@@ -39,25 +39,27 @@ flowchart TB
     MyActivity --Reference--> MyRepo
 ```
 
-**Garbage Collector, GC** - system process which automatically reclaims memory 
-by discarding objects that are no longer in use (not reachable) 
+[Roots](../java.md#Memory-Leaks) in Android App:
+1. object referenced from static fields
+2. Instances of application class (it's almost always the case)
+3. Live threads
 
-Object reachability flow:
+Tip: Each anonymous (which is inner class) have implicit reference to enclosing class objects. 
+So creating anonymous thread in onCreate of Activity then starting thread and closing Activity will cause memory leak as long as thread is running,
+because thread has reference to Activity.
+Each thread is Root for GC, hence GC can't clear the memory of Activity - memory leak.
 
-```mermaid
-flowchart LR
+Thread termination:
+1. Allow to complete successfully by return in run()
+2. Return from run() in response to an error
+3. return from run() in response to external flag
+4. return from run() in response to interruption
 
-    A{"is root?"} --yes--> B[reachable]
-    C --yes--> D{"is any parent reachable?"}
-    D --yes--> B
-    A --no--> C{is referenced?}
-    C --no--> E[not reachable]
-    D --no--> E
-    
-    style B fill:#0F0
-    style E fill:#F00
-    
-```
+`Handler` - simply wraps same thread which loops "forever" as long as it's not stopped.
+`Lopper.getMainLooper()` - abstraction over UI thread which loops over runnable
+
+The safe way is to not create `Handler`s and lookers and only use:
+`Handler(Looper.getMainLooper())` as this is the only way to get UI thread
 
 ### Multithreading
 

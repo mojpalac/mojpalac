@@ -71,10 +71,10 @@ Cons:
 - one misbehaving task can claim resources for long time thus making the entire system unresponsive
 
 #### Preemptive multitasking system
-Similar to cooperative, but it's Operating system that is responsible for yielding the tastks based on algorythm
+Similar to cooperative, but it's Operating system that is responsible for yielding the tasks based on algorithm
 Pros:
 - allows concurrent tasks
-- guarantees system responsivness
+- guarantees system responsiveness
 cons:
 - very complex system in the terms of creation. Used by majority of general purpose Operating Systems e.g. Android
 
@@ -155,3 +155,62 @@ Pros and cons of `synchronized`:
 - performance as it blocks other threads, though it's not always significant
 (depends on the environment not really important on Android)
 - -/+ it does not guarantee who will be next holder of monitor (it can be same thread)
+
+### Happens-Before
+If 2 actions can have happens-before relationships if:
+First action happens before second and first visible and ordered before second action
+It is lower level concept than "visibility".
+Visibility is a function of established (or not) happens-before relationships between actions.
+
+Why we need happens-before?
+Even though we write our code ordered.
+In reality there is no guarantee of sequence when we have multithreading.
+Compilers, JVM or CPU can reorder sequence, unless we define the constraints e.g. happens-before.
+
+Rule:
+1. if only 1 thread then order in code will be respected
+2. if action `x` synchronizes* with action `y`
+3. Everything before `thread.start()` is visible for thread.
+
+* - includes: `synchronized` keyword, read and write `volatile`s, `java.util.concurrent`
+
+If we have `volatile` filed (which guarantees that thread will read value from memory)
+and later call to `thread.start()` we have happens-before relation.
+Therefore, thread will always be checking for the value of the variable in the memory.
+
+
+### Garbage Collector, GC**
+System process which automatically reclaims memory by discarding objects
+that are no longer in use (not reachable)
+
+Object reachability flow:
+
+```mermaid
+flowchart LR
+
+    A{"is root?"} --yes--> B[reachable]
+    C --yes--> D{"is any parent reachable?"}
+    D --yes--> B
+    A --no--> C{is referenced?}
+    C --no--> E[not reachable]
+    D --no--> E
+    
+    style B fill:#0F0
+    style E fill:#F00
+    
+```
+
+**Circular Reference**
+
+``` mermaid
+flowchart LR
+MyObject1 <--->  MyObject2
+```
+
+Garbage Collector is able to recognize circular reference and knows that both object are not reachable,
+hence it will release memory for myObject1 and myObjet2
+
+### Memory Leaks
+object that is no longer used but can't be Garbage Collected
+
+**Roots** - object which are always consider by GC as reachable thus never cleaned by GC
