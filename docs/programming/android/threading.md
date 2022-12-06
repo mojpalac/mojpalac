@@ -59,11 +59,17 @@ Thread termination:
 3. return from run() in response to external flag
 4. return from run() in response to interruption
 
+for each Android component (`Activity`, `Service`, `BroadcastReceiver`, `Loader`) you can specify android process in `AndroidManifest.xml`
+
+you can share process with different app when using same Linux User ID and same certificate.
+
 `Handler` - simply wraps same thread which loops "forever" as long as it's not stopped.
 `Lopper.getMainLooper()` - abstraction over UI thread which loops over runnable
 
 The safe way is to not create `Handler`s and lookers and only use:
 `Handler(Looper.getMainLooper())` as this is the only way to get UI thread
+
+`View.post(Runnable)` & `Activity.runOnUiThread(runnable)` - can be used to execute code on UI thread
 
 Difference between `Looper.getMainLopper().post()` and `runOnUiThread()`:
 

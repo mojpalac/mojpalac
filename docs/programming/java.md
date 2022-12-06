@@ -1,5 +1,27 @@
 ## Threading
 
+Threads are using message queue as "inbox" for messages.
+Threads are using Looper to manage message queue.
+
+``` mermaid
+flowchart LR
+  subgraph Thread
+    direction LR
+    subgraph Queue
+    direction TB
+      m1 --> m2
+      m2 --> m3
+      m3 --> mn
+    end
+    Queue --> Looper  
+  end
+  
+```
+
+Handler.Thread has a build in Looper.
+Handler itself is a "postman" that delivers messages (each message is attached to handler).
+Message has to be posted and consumed inside the looper.
+
 ### CPU Operations basics
 
 ``` mermaid
