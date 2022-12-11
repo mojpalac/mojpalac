@@ -40,7 +40,7 @@ flowchart TB
     MyActivity --Reference--> MyRepo
 ```
 
-[Roots](../java.md#Memory-Leaks) in Android App:
+[Roots](java.md#Memory-Leaks) in Android App:
 
 1. object referenced from static fields
 2. Instances of application class (it's almost always the case)

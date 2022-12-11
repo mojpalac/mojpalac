@@ -1,5 +1,22 @@
 # AndroidManifest.xml
 
+loci: 12A Bathroom
+
+1. manifest in front of the door
+1. Closing Doors with noise - affinity
+1. Locking the doors - standard
+1. opening toilet - singleTop
+1. sitting - singeTask
+1. it happens - singleInstance
+1. paper - singleInstancePerTask
+1. flush - task
+1. brush - lyst issue
+1. turn on the tap
+1. soap
+1. wash hands
+1. turn off the tap
+1. towel
+
 ## \<activity>
 
 ### taskAffinity
@@ -17,6 +34,71 @@ By default, the taskAffinity is based on `Applicaiton` `namespace` (when is not 
 
 ### launchMode
 
+overall launchMode on its own only decides how Activity should be launched (either in the same task or not).
+But it's not the only thing that can impact how Activity is started.
+It also depends on current stack.
+My feelings are that the best what we can do it to use `standard` behaviour as often as possible. 
+In some specific cases we can use also `singleTop`. Using multiple activities can be painful otherwise!
+e.g. in below scenario:
+
+Task1: ActivityA(singleTask)
+Task2: ActivityB (singleInstance) <it was started from ActivityA>
+now ActivityB wants to start ActivityC with flag Intent.FLAG_ACTIVITY_NEW_TASK.
+(All activities have the same affinity)
+
+What will be the list of Task and Activities after starting ActivityC?
+Task1: ActivityA(singleTask), ActivityC
+Task2: ActivityB (singleInstance) <it was started from ActivityA>
+note: the task hierarchy is equivalent to the case if we wouldn't add the flag Intent.FLAG_ACTIVITY_NEW_TASK at all.
+
+Once ActivityC is opened pressing back button takes user to ActivityA
+
+In above case system checks that the task for the same affinity is existing and the task is not launched as
+singleInstance, so it attaches new Activity to it.
+to prevent the above we can use below:
+`Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK`
+using this will give below situation:
+
+Task1: ActivityA(singleTask),
+Task2: ActivityB (singleInstance) <it was started from ActivityA>
+Task3: ActivityC(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+
+Once ActivityC is opened pressing back button takes user to ActivityB -> ActivityA
+
+alternative, we can use:
+`Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK`
+this will give below situation:
+
+Task1: ActivityC(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK),
+Task2: ActivityB (singleInstance) <it was started from ActivityA>
+
+so Task1 is reused, but everything in there is removed
+
+Once ActivityC is opened pressing back button takes user to ActivityB -> Launcher
+
+another apprach, we can use:
+`Intent.FLAG_ACTIVITY_NEW_TASK or Intent.Intent.FLAG_ACTIVITY_CLEAR_TOP`
+this will give below situation:
+
+Task1: ActivityA(singleTask), ActivityC(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP),
+Task2: ActivityB (singleInstance) <it was started from ActivityA>
+
+Once ActivityC is opened pressing back button takes user to **ActivityA -> ActivityB**
+
+// some chatGPT notes
+If you try to start the same Activity with different affinity and launchMode settings after the Activity has already
+been created with the SingleInstance launch mode, the behavior will depend on the specific settings you use. Here are a
+few possible scenarios:
+
+    If you try to start the Activity with the same affinity and launchMode settings as the original instance, the existing instance will be reused and no new instance will be created. This means that the Activity will continue to be a singleton, and will be shared by all tasks that need to use it.
+    If you try to start the Activity with a different affinity but the same launchMode settings as the original instance, the existing instance will be reused, but it will be placed in a new task with the specified affinity. This means that the Activity will continue to be a singleton, but it will be part of a new task, and will be isolated from the other activities in that task.
+    If you try to start the Activity with a different launchMode but the same affinity as the original instance, the existing instance will be reused, but its launchMode will be updated to the specified launchMode. This means that the Activity will no longer be a singleton, and may be launched multiple times within the context of the specified affinity.
+    If you try to start the Activity with a different affinity and launchMode, a new instance of the Activity will be created, and it will be placed in a new task with the specified affinity and launchMode. This means that the Activity will no longer be a singleton, and will be part of a new task, with its own behavior and characteristics.
+
+Overall, the specific behavior of the Activity in these scenarios will depend on the specific settings you use, and on
+the state of the original instance of the Activity. It is important to carefully consider these settings and their
+effects when starting an Activity in order to ensure that the Activity behaves as desired.
+
 [StackOverflow link explaining it](https://stackoverflow.com/a/14991341/5864033)
 
 ```
@@ -32,14 +114,13 @@ to that instance through a call to its onNewIntent() method, rather than creatin
 
 `singleTask` - The system creates the activity at the root of a new task or locates the activity on an existing task
 with the same **affinity**. If an instance of the activity already exists **and** is at the root of the task, the system
-routes
-the intent to existing instance through a call to its onNewIntent() method, rather than creating a new instance.
+routes the intent to existing instance through a call to its onNewIntent() method, rather than creating a new instance.
 Meanwhile, all the other activities on top of it are **destroyed**.
 **FIND EXISTING ACTIVITY WITH SAME AFFINITY IN THE TASK OR CREATE NEW TASK**
 
 `singleInstance` - **The activity is always the single and only member of its task.**, beside Same as "singleTask",
-holding the instance. - not recommended for general
-use, This can be useful for activities that require a unique, persistent state, such as a login screen or a settings
+holding the instance. This can be useful for activities that require a unique, persistent state, such as a login screen
+or a settings
 page.
 
 `singleInstancePerTask` - the first activity that
@@ -64,7 +145,8 @@ as the specified action and "android.intent.category.LAUNCHER" as the specified 
 
 if activity is launched with launchMode: singleTask, singleInstance, singleInstancePerTask it's important to note that
 the activity will **only** clear the stack of its own task.
-e.g. 
+e.g.
+
 - ActivityA, `launchMode:singleTask`
 - ActivityB, `launchMode:singleInstance`
 - ActivityC, `launchMode:standard`
@@ -74,25 +156,31 @@ note: if Activity is started as `startActivityForResult()` it belongs to the **s
 
 flow: `A->B->C`
 tasks [backstack]:
-1. [A] 
-2. [B] 
+
+1. [A]
+2. [B]
 3. [C]
 
-Each Activity will be in separate task, because ActivityB is forcing to be started as new task and as single element. 
+Each Activity will be in separate task, because ActivityB is forcing to be started as new task and as single element.
 Lyst Issue:
 The Stack of activities is cleared whenever we click on launcher. The problem is not affecting only
 `NativeCheckoutAcitivty`, but any activity that is opened from HomeActivity
 
-1. `SplashActivity` is always started as `launchMode:SingleTask` -> tapping on Launcher Icon will always clear the stack of
+1. `SplashActivity` is always started as `launchMode:SingleTask` -> tapping on Launcher Icon will always clear the stack
+   of
    activities above it, although in our case it’s not really an issue because it’s the only activity in this stack
-   anyway because `SplashActivitiy` always calls `finish()` when navigating somewhere + `HomeActivity` settings cause it would
+   anyway because `SplashActivitiy` always calls `finish()` when navigating somewhere + `HomeActivity` settings cause it
+   would
    happen anyway if `finish()` wouldn’t be called.
-2. `HomeActivity` is always started as `launchMode:SingleInstance` -> tapping on Launcher Icon will always clear the stack
+2. `HomeActivity` is always started as `launchMode:SingleInstance` -> tapping on Launcher Icon will always clear the
+   stack
    of activities above `HomeActivity`, it is our case.
    Because it is started as `SingleInstance` whenever we put app in the background and comeback new `SplashActivity` is
-   created which is opening `HomeActivity`, because the task for `HomeActivity` already exists, `HomeActivity` is reopened with
+   created which is opening `HomeActivity`, because the task for `HomeActivity` already exists, `HomeActivity` is
+   reopened with
    clearing of the stack above.
-   With current approach it’s impossible to keep any other activity on TOP of `HomeActivity` when pressing launcher icon.
+   With current approach it’s impossible to keep any other activity on TOP of `HomeActivity` when pressing launcher
+   icon.
 
 ```mermaid
 sequenceDiagram
