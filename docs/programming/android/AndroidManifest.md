@@ -7,15 +7,23 @@ loci: 12A Bathroom
 1. Locking the doors - standard
 1. opening toilet - singleTop
 1. sitting - singeTask
-1. it happens - singleInstance
-1. paper - singleInstancePerTask
-1. flush - task
-1. brush - lyst issue
-1. turn on the tap
-1. soap
-1. wash hands
-1. turn off the tap
-1. towel
+1. it already exists - singleInstance
+1. rolls of paper - singleInstancePerTask
+1. flush - lyst issue
+
+story:
+I'm going through the crowd that is standing in front of the bathroom doors, I enter bathroom closing the doors with
+cracking noise.
+Next I am locking the doors and looks how after the locking, the lock is falling down and stacks on previously used
+locks.
+I can see that there are multiple lids on toilet so Im removing all of them except one and put the lid up.
+When I try to sit some people start to screaming that they were here before me and I should go to queue.
+I'm telling them that I was here before and show them photo, they exit.
+I'm doing my best, but it just can't happen. Then I realize that I was here before because of the same reason, so it
+means that somewhere it already exists! 
+I take the rolls of toilet paper and use them as rods (paper is line) to find the instance.
+After fail attempt I flush everything and notice that rolls of paper are back where they were. 
+
 
 ## \<activity>
 
@@ -37,7 +45,7 @@ By default, the taskAffinity is based on `Applicaiton` `namespace` (when is not 
 overall launchMode on its own only decides how Activity should be launched (either in the same task or not).
 But it's not the only thing that can impact how Activity is started.
 It also depends on current stack.
-My feelings are that the best what we can do it to use `standard` behaviour as often as possible. 
+My feelings are that the best what we can do it to use `standard` behaviour as often as possible.
 In some specific cases we can use also `singleTop`. Using multiple activities can be painful otherwise!
 e.g. in below scenario:
 
