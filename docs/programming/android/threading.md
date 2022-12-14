@@ -12,8 +12,8 @@
 1. Domi 'give it to me'! - [Atomic value](#Atomic)
 1. DragonBall fusion - [Synchronized](#Synchronized)
 1. picking up the fibres - [Happens-Before](#Happens Before)
-1. throwing to bin - [Happens-Garbage Collector](#Garbage Collector)
-1. oil leaking from celling [Memory Leak](#Memory Leak)
+1. bin - [Happens-Garbage Collector](#Garbage Collector)
+1. oil leaking from bulb [Memory Leak](#Memory Leak)
 
 I am going sleep, and I am standing in open bedroom doors I spot the yarn laying on the floor that which fibre goes
 string to bed.
@@ -39,6 +39,9 @@ and I will give it her once I will finish playing with atom.
 Then we are both doing like in dragonball fusion screaming "synchronized!" and I'm passing an atom to Domi.
 Domi is holding an atom, and she doesn't see snakes, problem solved!
 I stared to picking up the fibres from yarn and I remind myself that this happened before.
+The fibre leads me to the bucket.
+When I am standing I can feel drops falling on my head, it's looks like an oil.
+I look up and I see bulb that is covered in oil which is dripping with oil.
 
 ## Thread
 
@@ -60,6 +63,8 @@ flowchart LR
 
 Each process can host one or more tasks. In Android these are Threads.
 Threads _share_ the execution environment with the parent process. They can communicate and exchange data.
+In android each program (application) gets its own task.
+This task is associated with isolated execution environment (sandbox).
 
 for each Android component (`Activity`, `Service`, `BroadcastReceiver`, `Loader`) you can specify android process
 in `AndroidManifest.xml`
@@ -330,13 +335,14 @@ cons:
 
 ### Happens Before
 
+It is lower level concept than "visibility".
+Visibility is a **function** **of** established (or not) **happens-before** relationships between actions.
+
 2 actions can have happens-before relationships if:
 
 1. First action is ordered before second action.
 1. First action happens before second
 1. First action is visible to second action
-   It is lower level concept than "visibility".
-   Visibility is a **function** **of** established (or not) **happens-before** relationships between actions.
 
 Why we need happens-before?
 Even though we write our code ordered.
@@ -361,6 +367,15 @@ thread.
 
 GC - System process which automatically reclaims memory by discarding objects
 that are no longer in use (not reachable)
+
+**Root** - object which is always consider by GC as reachable thus never cleaned by GC.
+
+
+Roots in Android App:
+1. object referenced from static fields
+2. Instances of application class (it's almost always the case)
+3. Live threads
+
 
 Object reachability flow:
 
@@ -399,10 +414,6 @@ memory then it's starts killing from bot-to-top but also checks which takes the 
 
 object that is no longer used but can't be Garbage Collected
 
-**Roots** - object which are always consider by GC as reachable thus never cleaned by GC
-In android each program (application) gets its own task.
-This task is associated with isolated execution environment (sandbox).
-
 Memory assignment
 
 ```kotlin
@@ -421,13 +432,7 @@ flowchart TB
     MyActivity --Reference--> MyRepo
 ```
 
-Roots in Android App:
-
-1. object referenced from static fields
-2. Instances of application class (it's almost always the case)
-3. Live threads
-
-Tip: Each anonymous (which is inner class) have implicit reference to enclosing class objects.
+Each anonymous (which is inner class) have implicit reference to enclosing class objects.
 So creating anonymous thread in onCreate of Activity then starting thread and closing Activity will cause memory leak as
 long as thread is running,
 because thread has reference to Activity.
