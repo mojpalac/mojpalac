@@ -4,13 +4,13 @@
 
 **proper posture**
 
-![img.png](proper_posture.png)
+![img.png](../../resources/images/proper_posture.png)
 
 everything needs to be inline, keep the proper distance from the cue ball (enough space for aiming and continuation with cue)
 
 **bridge hand**
 
-![img_1.png](bridge_hand.png)
+![img_1.png](../../resources/images/bridge_hand.png)
 
 (we should adjust the bridge height based on where we plan to hit the cue ball)
 
@@ -20,7 +20,7 @@ everything needs to be inline, keep the proper distance from the cue ball (enoug
 
 **throw effect** when aiming with cut angle you need to adjust for the thrown angle cause by spin 
 
-![img_3.png](throw_effect.png)
+![img_3.png](../../resources/images/throw_effect.png)
 
 **always follow through with cue**
 
