@@ -150,4 +150,122 @@ the code running in the actors is the same.
 Blackboard is a common (shared?) space where multiple independent actors/processes/agebts can access the stored data in
 a form of _laissez faire_ concurrency,
 
-## 7 Concurrency
+## 7 While You Are Coding
+
+### 37 Listen to Your Lizard Brain
+
+#### Tip 61 Listen to Your Inner Lizard
+
+1. First, stop what you’re doing.
+2. Give yourself a little time and space to let your brain organize itself.
+3. Stop thinking about the code,
+4. do something that is fairly mindless for a while, away from a keyboard. Take a walk, have lunch,
+   chat with someone. Maybe sleep on it. Let the ideas percolate up through the layers of your brain on their own: you
+   can’t force it.
+5. wait for a "ha!" moment.
+
+If that doesn't work, try to explain the code to someone (even to rubber duck).
+
+If still you have a problem, it's time for prototyping.
+
+### 38 Programming by Coincidence
+
+Why should you take the risk of messing with something that’s working? <br>
+Well, we can think of several reasons:
+
+- It may not really be working—it might just look like it is.
+- The boundary condition you rely on may be just an accident.
+  In different circumstances (a different screen resolution, more CPU cores), it might behave differently.
+- Undocumented behavior may change with the next release of the library. Additional and unnecessary calls make your code
+  slower. Additional calls increase the risk of introducing new bugs of their own. For code you write that others will
+  call, the basic principles of good modularization and of hiding implementation behind small, well-documented
+  interfaces can all help.
+
+tip: never store a phone number in numeric field
+
+### 39 Algorithm Speed
+
+#### Big-O Notation - mathematical way of dealing with approximations.
+
+highest-order term will dominate the value as increases, the convention is to remove all low-order terms, and not to
+bother showing any constant multiplying:
+
+O(n^2/2 + 3n) == O(n^2) == O(n^2)
+
+```
+O(1) - Constant (access element in array, simple statements)
+O(lg n) - Logarithmic (binary search). The base of the logarithm doesn’t matter, so this is equivalent.
+O(n) - Linear (sequential search)
+O(n lg n) - Worse than linear, but not much worse. (Average runtime of quicksort, heapsort)
+O(n^2) - Square law (selection and insertion sorts)
+O(n^3) - Cubic (multiplication of two  matrices)
+O(C^n) - Exponential (traveling salesman problem, set partitioning)
+```
+
+![](../../resources/images/runtime_of_various_algorithms.png)
+
+### 40 Refactoring
+
+Software development is like gardening -You plant many things in a garden according to an initial plan and conditions.
+Some thrive, others are destined to end up as compost. You may move plantings relative to each other to take advantage
+of the interplay of light and shadow, wind and rain. Overgrown plants get split or pruned, and colors that clash may get
+moved to more aesthetically pleasing locations. You pull weeds, and you fertilize plantings that are in need of some
+extra help. You constantly monitor the health of the garden, and make adjustments (to the soil, the plants, the layout)
+as needed.
+
+Refactoring [Fow19] is defined by Martin Fowler as a: disciplined technique for restructuring an existing body of code,
+altering its internal structure without changing its external behavior.
+
+_Time pressure is often used as an excuse for not refactoring. But this excuse just doesn’t hold up: fail to refactor
+now, and there’ll be a far greater time investment to fix the problem down the road—when there are more dependencies to
+reckon with. Will there be more time available then? Nope._
+
+When explaining think of the code that needs refactoring as “a growth.” Removing it requires invasive surgery. You can
+go in now, and take it out while it is still small. Or, you could wait while it grows and spreads—but removing it then
+will be both more expensive and more dangerous. Wait even longer, and you may lose the patient entirely.
+
+Martin Fowler offers the following simple tips on how to refactor without doing more harm than good:
+
+1. Don’t try to refactor and add functionality at the same time.
+2. Make sure you have good tests before you begin refactoring. Run the tests as often as possible. That way you will
+   know quickly if your changes have broken anything.
+3. Take short, deliberate steps:
+    - move a field from one class to another,
+    - split a method,
+    - rename a variable.
+
+Refactoring often involves making many localized changes that result in a larger-scale change. If you keep your
+steps small, and test after each step, you will avoid prolonged debugging.
+
+### 41 Test to Code
+
+_We believe that the major benefits of testing happen when you think about and write the tests, not when you run them._
+
+Why? Because it allows you to understand the under the hood requirements of feature (e.g. parameters)
+
+Use TDD, but avoid:
+
+- They spend inordinate amounts of time ensuring that they always have 100% test coverage.
+- They have lots of redundant tests. For example, before writing a class for the first time, many TDD adherents will
+  first write a failing test that simply references the class’s name. It fails, then they write an empty class
+  definition and it passes. But now you have
+  a test that does absolutely nothing; the next test you write will also reference the class, and so it makes the first
+  unnecessary. There’s more stuff to change if the class name changes later. And this is just a trivial example.
+- Their designs tend to start at the bottom and work their way up. (TIP 68, Build End-to-End, Not Top-Down or Bottom Up)
+
+Build small pieces of end-to-end functionality, learning about the problem as you go. Apply this learning as you
+continue to flesh out the code, involve the customer at each step, and have them guide the process.
+
+The basic cycle of TDD is: Decide on a small piece of functionality you want to add. Write a test that will pass once
+that functionality is implemented. Run all tests. Verify that the only failure is the one you just wrote. Write the
+smallest amount of code needed to get the test to pass, and verify that the tests now run cleanly. Refactor your code:
+see if there is a way to improve on what you just wrote (the test or the function). Make sure the tests still pass when
+you’re done. The idea is that this cycle should be very short: a matter of minutes, so that you’re constantly writing
+tests and then getting them to work.
+
+### 42 Property-Based Testing
+
+invariants, things that remain true about some piece of state when it’s passed through a function. For example, if you
+sort a list, the result will have the same number of elements as the original—the length is invariant.
+
+#### Tip Use property based tests to validate your assumptions
