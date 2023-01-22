@@ -7,7 +7,7 @@ _Concurrency_ is when the execution of two or more pieces of code **act** as if 
 _Parallelism_ is when they **do** run at the same time.
 
 concurrency is a software mechanism, and parallelism is a hardware concern. If we have multiple processors, either
-locally or remotely, then if we can split work out among them we can reduce the overall time things take.
+locally or remotely, then if we can split work out among them, we can reduce the overall time things take.
 
 ### 33 Breaking Temporal Coupling
 
@@ -53,7 +53,7 @@ We’re told that the steps are:
 
 the top-level tasks (1, 2, 4, 10, and 11) can all happen concurrently, up front. Tasks 3, 5, and 6 can happen in
 parallel later.
-When we look at the activities, we realize that number 8, liquify, will take a minute. During that time, our bartender
+When we look at the activities, we realize that number 8, liquefy, will take a minute. During that time, our bartender
 can get the glasses and umbrellas (activities 10 and 11) and probably still have time to serve another customer.
 
 ### 34. Shared State is Incorrect State
@@ -147,8 +147,8 @@ the code running in the actors is the same.
 
 ### Topic 36 Blackboards
 
-Blackboard is a common (shared?) space where multiple independent actors/processes/agebts can access the stored data in
-a form of _laissez faire_ concurrency,
+Blackboard is a common (shared?) space where multiple independent actors/processes/agents can access the stored data in
+a form of _laissez-faire_ concurrency,
 
 ## 7 While You Are Coding
 
@@ -177,7 +177,7 @@ Well, we can think of several reasons:
 - The boundary condition you rely on may be just an accident.
   In different circumstances (a different screen resolution, more CPU cores), it might behave differently.
 - Undocumented behavior may change with the next release of the library. Additional and unnecessary calls make your code
-  slower. Additional calls increase the risk of introducing new bugs of their own. For code you write that others will
+  slower. Additional calls increase the risk of introducing new bugs of their own. For code, you write that others will
   call, the basic principles of good modularization and of hiding implementation behind small, well-documented
   interfaces can all help.
 
@@ -248,7 +248,7 @@ Use TDD, but avoid:
 - They spend inordinate amounts of time ensuring that they always have 100% test coverage.
 - They have lots of redundant tests. For example, before writing a class for the first time, many TDD adherents will
   first write a failing test that simply references the class’s name. It fails, then they write an empty class
-  definition and it passes. But now you have
+  definition, and it passes. But now you have
   a test that does absolutely nothing; the next test you write will also reference the class, and so it makes the first
   unnecessary. There’s more stuff to change if the class name changes later. And this is just a trivial example.
 - Their designs tend to start at the bottom and work their way up. (TIP 68, Build End-to-End, Not Top-Down or Bottom Up)
@@ -269,3 +269,207 @@ invariants, things that remain true about some piece of state when it’s passed
 sort a list, the result will have the same number of elements as the original—the length is invariant.
 
 #### Tip Use property based tests to validate your assumptions
+
+There are also code invariants, things that remain true about some piece of state when it’s passed through a function.
+For example, if you sort a list, the result will have the same number of elements as the original—the length is
+invariant. Once we work out our contracts and invariants (which we’re going to lump together and call properties) we can
+use them to automate our testing. What we end up doing is called property-based testing.
+
+```python
+from hypothesis import given
+import hypothesis.strategies as some 
+
+@given(some.lists(some.integers()))
+def test_list_size_is_invariant_across_sorting(a_list):
+    original_length = len(a_list)
+    a_list.sort() 
+    assert len(a_list) == original_length 
+    
+@given(some.lists(some.text()))
+def test_sorted_result_is_ordered(a_list):
+    a_list.sort()
+    for i  in range(len(a_list) - 1): 
+        assert a_list[i] <= a_list[i + 1]
+
+Thomas, David; Hunt, Andrew. Pragmatic Programmer, The (pp. 394-395). Pearson Education. Kindle Edition. 
+```
+
+### 43 Stay Safe Out There
+
+#### Security Basic Principles
+
+Pragmatic Programmers have a healthy amount of paranoia. We know we have faults and
+limitations, and that external attackers will seize on any opening we leave to compromise our systems. Your particular
+development and deployment environments will have their own security-centric needs, but there are a handful of basic
+principles that you should always bear in mind:
+
+1. Minimize Attack Surface Area
+2. Principle of The Least Privilege
+3. Secure Defaults
+4. Encrypt Sensitive Data
+5. Maintain Security Updates
+
+### 44 Naming Things
+
+whenever you create something, you need to pause and think “what is my motivation to create this?”
+
+It’s important that everyone on the team knows what project jargon means, and that they use them consistently.
+
+1. encourage a lof of communication e.g. Pair programming, huddles
+2. Keep project glossary, listing the terms that have special meaning ot the team (e.g. on confluence)
+
+## 8 Before The Project
+
+### 45 The Requirements Pit
+
+### Tip 76 Programmers Help People Understand What They Want
+
+we annoy people by looking for edge cases and asking about them.
+
+_- You: We were wondering about the $50 total. Does that include what we’d normally charge for shipping?
+
+- Client: Of course. It’s the total they’d pay us.
+- You: That’s nice and simple for our customers to understand: I can see the attraction. But I can see some less
+  scrupulous customers trying to game that system.
+- Client: How so? You: Well, let’s say they buy a book for $25, and then select overnight shipping, the most expensive
+  option. That’ll likely be about $30, making the
+  whole order $55. We’d then make the shipping free, and they’d get overnight shipping on a $25 book for just $25._
+
+**At this point the experienced developer stops. Deliver facts, and let the client make the decisions**
+
+If it's not easy to get a feedback create a mockup and prototype to show to the client "is this way you meant?" this
+gives you quick feedback loop.
+
+**walk in your cline's shoes**
+simple way to achieve this is by becoming a client - spend time on the clients daily work routine to understand better
+the context.
+
+### 46 Solving Impossible Puzzles
+
+#### Tup 81 Don’t Think Outside the Box—Find the Box
+
+Whenever you're solving a hard problem focus on constrains
+
+You must challenge any preconceived notions and evaluate whether or not they are real, hard-and-fast constraints. It’s
+not whether you think inside the box or outside the box. The problem lies in finding the box—identifying the real
+constraints.
+
+ask questions:
+
+- Why are you solving this problem?
+- What’s the benefit of solving it?
+- Are the problems you’re having related to edge cases? Can you eliminate them?
+- Is there a simpler, related problem you can solve?
+
+When you have a problem with solving the problem always take a break and focus on something different.
+
+### 47 Working Together
+
+**Pair Programming** - one developer operates the keyboard, and the other does not. Both work on the problem together,
+and can switch typing duties as needed.
+
+**Mob Programming** - extension of pair programing but using more than 2 people (not necessarily ony developers).
+you swap out the typist every 5-10 minutes.
+
+#### Tip 82 Don’t Go into the Code Alone
+
+### 48 The Essence of Agility
+
+Manifesto values:
+
+- **Individuals and interactions** over processes and tools
+- **Working software** over comprehensive documentation
+- **Customer collaboration** over contract negotiation
+- **Responding to change** over following a plan
+
+That is, while there is value in the items on the right, we value the items on the left more.
+
+Agile is not about process but responding to change, to the unknowns after you set out.
+
+The above values don't tell what to do. They tell you what to look for.
+
+our recipe for working in an agile way:
+
+1. Work out where you are.
+1. Make the smallest meaningful step towards where you want to be.
+1. Evaluate where you end up, and fix anything you broke.
+1. Repeat
+
+## 9 Pragmatic Projects
+
+### 49 Pragmatic teams
+
+team has to support the **no broken window** (those small imperfections that no one fixes) mentality.
+Also be stayed alerted to avoid being **Boiled Frogs**. It’s even easier for teams as a whole to get boiled. People
+assume that someone else is handling an issue, or that the team leader must have OK’d a change that your user is
+requesting. Even the best-intentioned teams can be oblivious to significant changes in their projects.
+
+**Communicate Team Presence** - team needs to communicate with the rest of the organization.
+To outsiders, the worst project teams are those that appear sullen and reticent. They hold meetings with no structure,
+where no one wants to talk. Their emails and project documents are a mess: no two look the same, and each uses different
+terminology.
+
+There is a simple marketing trick that helps teams communicate as one: generate a brand. When you start a project, come
+up with a name for it, ideally something off-the-wall. (In the past, we’ve named projects after things such as killer
+parrots that prey on sheep, optical illusions, gerbils, cartoon characters, and mythical cities.) Spend 30 minutes
+coming up with a zany logo, and use it. Use your team’s name liberally when talking with people. It sounds silly, but it
+gives your team an identity to build on, and the world something memorable to associate with your work.
+
+Organize Fully Functional Teams - That means that you need all the skills to do that within the team: frontend, UI/UX,
+server, DBA, QA, etc.
+It allows to build end-to-end functionality in small pieces.
+
+### 50 Coconut don't cut it
+
+The goal of course isn’t to “do Scrum,” “do agile,” “do Lean,” or what-have-you. The goal is to be in a position to
+deliver working software that gives the users some new capability at a moment’s notice. Not weeks, months, or years from
+now, but now. For many teams and organizations, continuous delivery feels like a lofty, unattainable goal, especially if
+you’re saddled with a process that restricts delivery to months, or even weeks. But as with any goal, the key is to keep
+aiming in the right direction.
+
+### 51 Pragmatic Starter Kit
+
+covering three critical and interrelated topics:
+
+- Version Control - is needed
+- Regression Testing - Use all kinds of testing to make sure that your code is working properly.
+  (Unit test, Integration tests, QA testing, performance testing) + make sure to test the state not the coverage
+- Full Automation - if something can be automated do it (like setting up your environment, CI)
+
+### 52 Delight Your Users
+
+Understand the underlying expectations of value behind the project, you can start thinking about how you can deliver
+against them:
+
+- Make sure everyone on the team is totally clear about these expectations.
+- When making decisions, think about which path forward moves closer to those expectations.
+- Critically analyze the user requirements in light of the expectations. On many projects we’ve discovered that the
+  stated “requirement” was in fact just a guess at what could be
+  done by technology: it was actually an amateur implementation plan dressed up as a requirements document. Don’t be
+  afraid to make suggestions that change the requirement if you can demonstrate that they will move the project closer
+  to
+  the objective.
+- Continue to think about these expectations as you progress through the project.
+
+### 53 Pride and Prejudice
+
+You shouldn’t jealously defend your code against interlopers; by the same token, you should treat other people’s code
+with respect. The Golden Rule (“Do unto others as you would have them do unto you’’) and a foundation of mutual respect
+among the developers is critical to make this tip work.
+We want to see pride of ownership. “I wrote this, and I stand behind my work.” Your signature should come to be
+recognized as an indicator of quality. People should see your name on a piece of code and expect it to be solid, well
+written, tested, and documented. A really professional job. Written by a professional.
+
+## 10 Postface
+
+Many nonembedded systems can also do both great good and great harm. Social media can promote peaceful revolution or
+foment ugly hate. Big data can make shopping easier, and it can destroy any vestige of privacy you might think you have.
+Banking systems make loan decisions that change people’s lives. And just about any system can be used to snoop on its
+users. We’ve seen hints of the possibilities of a utopian future, and examples of unintended consequences leading to
+nightmare dystopias. The difference between the two outcomes might be more subtle than you think. And it’s all in your
+hands.
+
+We have a duty to ask ourselves two questions about every piece of code we deliver: 
+1. Have I protected the user? 
+2. Would I use this myself?
+
