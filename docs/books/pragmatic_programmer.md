@@ -1,5 +1,363 @@
 # Pragmatic programmer
 
+## 1 A Pragmatic Philosophy
+
+### 1 It’s Your Life
+
+It is your life. You own it. You run it. You create it. Many developers we talk to are frustrated. Their concerns are
+varied. Some feel they’re stagnating in their job, others that technology has passed them by. Folks feel they are
+underappreciated, or underpaid, or that their teams are toxic. Maybe they want to move to Asia, or Europe, or work from
+home.
+And the answer we give is always the same.
+And the answer we give is always the same.
+_Why can’t you change it?_
+
+Does your work environment suck? Is your job boring? Try to fix it. But don’t try forever. As Martin Fowler says, "you
+can change your organization or change your organization."
+
+### 2 The Cat Ate My Source Code
+
+Team Trust - is absolutely essential for creativity and collaboration according to the research literature [e.g. (
+research) [https://psycnet.apa.org/doiLanding?doi=10.1037%2Fapl0000110].
+In a healthy environment based in trust, you can safely speak your mind, present your ideas, and rely on your team
+members who can in turn rely on you.
+
+Take Responsibility - When you do accept the responsibility for an outcome, you should expect to be held accountable for
+it. When you make a mistake (as we all do) or an error in judgment, admit it honestly and try to offer options.
+It is up to you to provide solutions, not excuses.
+
+Before you approach anyone to tell them why something can’t be done, is late, or is broken, stop and listen to yourself.
+Talk to the rubber duck on your monitor, or the cat. Does your excuse sound reasonable, or stupid? How’s it going to
+sound to your boss?
+Run through the conversation in your mind. What is the other person likely to say? Will they ask, "Have you tried this…"
+or "Didn’t you consider that?" How will you respond? Before you go and tell them the bad news, is there anything else
+you can try? Sometimes, you just know what they are going to say, so save them the trouble.
+
+explain what can be done to salvage the situation
+
+- refactoring
+- prototyping
+- better testing
+- automation
+- additional resources
+- more time with user
+- maybe time for learning some technique or technology in greater depth?
+
+### 3 Software Entropy
+
+**Entropy** is a term from physics that refers to the amount of "disorder" in a system.
+it might be called, by the more optimistic term, "technical debt," with the implied notion that they’ll pay it back
+someday. They probably won’t.
+
+In inner cities, some buildings are beautiful and clean, while others are rotting hulks. Why? Researchers in the field
+of crime and urban decay discovered a fascinating trigger mechanism, one that very quickly turns a clean, intact,
+inhabited building into a smashed and abandoned derelict.[5] A broken window. One broken window, left unrepaired for any
+substantial length of time, instills in the inhabitants of the building a sense of abandonment—a sense that the powers
+that be don’t care about the building. So another window gets broken. People start littering. Graffiti appears. Serious
+structural damage begins. In a relatively short span of time, the building becomes damaged beyond the owner’s desire to
+fix it, and the sense of abandonment becomes reality. Why would that make a difference? Psychologists have done
+studies[6] that show hopelessness can be contagious. Think of the flu virus in close quarters. Ignoring a clearly broken
+situation reinforces the ideas that perhaps nothing can be fixed, that no one cares, all is doomed; all negative
+thoughts which can spread among team members, creating a vicious spiral.
+
+#### Tip 5 Don’t Live with Broken Windows
+
+Don’t leave "broken windows" (bad designs, wrong decisions, or poor code) unrepaired. Fix each one as soon as it is
+discovered. If there is insufficient time to fix it properly, then board it up. Perhaps you can comment out the
+offending code, or display a "Not Implemented" message, or substitute dummy data instead. Take some action to prevent
+further damage and to show that you’re on top of the situation. We’ve seen clean, functional systems deteriorate pretty
+quickly.
+You may be thinking that no one has the time to go around cleaning up all the broken glass of a project. If so, then
+you’d better plan on getting a dumpster, or moving to another neighborhood. Don’t let entropy win.
+
+### 4 Stone Soup and Boiled Frogs
+
+Stone soup - allegory to the soldiers coming back from war stopping at village hoping for some food.
+Villagers didn't want to share the food.
+The soldiers boiled a pot of water and carefully placed three stones into it. The amazed villagers came out to watch.
+Once villagers started to seeing what's happening one by one get more interested and ask about it, in return they hear
+from soldiers.
+"The stone soup is good as it is, but some say it tests better when we add X" which cause villagers to start to share
+their supply with soldiers.
+Eventually they had produced a large pot of steaming soup. The soldiers removed the stones, and they sat down with the
+entire village to enjoy the first square meal any of them had eaten in months.
+
+The soldiers act as a catalyst, bringing the village together, so they can jointly produce something that they couldn’t
+have done by themselves—a synergistic result. Eventually everyone wins.
+
+#### Tip 6 Be a Catalyst for Change
+
+Work out what you can reasonably ask for. Develop it well. Once you’ve got it, show people, and let them marvel. Then
+say "of course, it would be better if we added…" Pretend it’s not important. Sit back and wait for them to start asking
+you to add the functionality you originally wanted. People find it easier to join an ongoing success. Show them a
+glimpse of the future, and you’ll get them to rally around.
+
+boiled frog - that if you take a frog and drop it into boiling water, it will jump straight back out again. However, if
+you place the frog in a pan of cold water, then gradually heat it, the frog won’t notice the slow increase in
+temperature and will stay put until cooked. The frog just doesn't notice the change.
+
+Don’t be like the fabled frog. Keep an eye on the big picture. Constantly review what’s happening around you, not just
+what you personally are doing.
+
+### 5 Good-Enough Software
+
+The scope and quality of the system you produce should be discussed as part of that system’s requirements.
+
+Great software today is often preferable to the fantasy of perfect software tomorrow. If you give your users something
+to play with early, their feedback will often lead you to a better eventual solution (Tracer Bullet).
+
+### 6 Your Knowledge Portfolio
+
+Managing a knowledge portfolio is very similar to managing a financial portfolio:
+
+- Serious investors invest **regularly—as a habit**.
+- **Diversification** is the key to long-term success.
+- Smart investors balance their portfolios between **conservative** and **high-risk**, high-reward investments.
+- Investors try to buy low and sell high for maximum return.
+- Portfolios should be reviewed and rebalanced periodically.
+
+Goals:
+
+- Learn at least one new language every year
+- Read a technical book each month
+- Read nontechnical books, too
+- Take classes
+- Participate in local user groups and meetups
+- Experiment with different environments
+- Stay current
+
+#### Tip 10 Critically Analyze What You Read and Hear
+
+A favorite consulting trick: ask "why?" at least five times. Ask a question, and get an answer. Dig deeper by asking
+"why?" Repeat as if you were a petulant four-year old (but a polite one). You might be able to get closer to a root
+cause this way.
+
+- Who does this benefit? It may sound cynical, but follow the money can be a very helpful path to analyze. The benefits
+  to someone else or another organization may be aligned with your own, or not.
+- What’s the context? Everything occurs in its own context, which is why "one size fits all" solutions often don’t.
+  Consider an article or book touting a "best practice." Good questions to consider are best for "who?" What are the
+  prerequisites, what are the consequences, short and long term?
+- When or Where would this work? Under what circumstances? Is it too late? Too early? Don’t stop with first-order
+  thinking (what will happen next), but use second-order thinking: what will happen after that?
+- Why is this a problem? Is there an underlying model? How does the underlying model work?
+
+### 7 Communicate!
+
+Treat English (or whatever your native tongue may be) **as just another programming language**. Write natural language
+as you would write code: honor the DRY principle, ETC, automation, and so on. (We discuss the DRY and ETC design
+principles in the next chapter.)
+
+**Know Your Audience** - By making the appropriate pitch to each group, you’ll get them all excited about your project.
+As with all forms of communication, the trick here is to gather feedback. Don’t just wait for questions: ask for them.
+Look at body language, and facial expressions. One of the Neuro Linguistic Programming presuppositions is "The meaning
+of your communication is the response you get." Continuously improve your knowledge of your audience as you communicate.
+
+**Know What You Want to Say**
+Fiction writers often plot out their books in detail before they start, but people writing technical documents are often
+happy to sit down at a keyboard, enter:
+
+```
+  1. Introduction 
+```
+
+Plan what you want to say. Write an outline. Then ask yourself, "Does this communicate what I want to
+express to my audience in a way that works for them?" Refine it until it does.
+
+**Choose Your Moment**
+Catch a manager who’s just been given a hard time by her boss because some source code got lost, and you’ll have a more
+receptive listener to your ideas on source code repositories. Make what you’re saying relevant in time, as well as in
+content. Sometimes all it takes is the simple question, "Is this a good time to talk about…?"
+
+**Make It Look Good**
+Too many developers (and their managers) concentrate solely on content when producing written documents. We think this
+is a mistake. Any chef (or watcher of the Food Network) will tell you that you can slave in the kitchen for hours only
+to ruin your efforts with poor presentation.
+There is no excuse today for producing poor-looking printed documents.
+
+**Involve Your Audience**
+If possible, involve your readers with early drafts of your document. Get their feedback, and pick their brains. You’ll
+build a good working relationship, and you’ll probably produce a better document in the process.
+
+**Be a Listener**
+There’s one technique that you must use if you want people to listen to you: listen to them. Even if this is a situation
+where you have all the information, even if this is a formal meeting with you standing in front of 20 suits—if you don’t
+listen to them, they won’t listen to you. Encourage people to talk by asking questions, or ask them to restate the
+discussion in their own words. Turn the meeting into a dialog, and you’ll make your point more effectively. Who knows,
+you might even learn something.
+
+**Get Back to People**
+Always respond to emails and voicemails, even if the response is simply "I’ll get back to you later".
+communicate. The more effective that communication, the more influential you become.
+
+**Keep code and documentation together**
+Writing documentation can be made easier by not duplicating effort or wasting time, and by keeping documentation close
+at hand—in the code itself. In fact, we want to apply all of our pragmatic principles to documentation as well as to
+code.
+
+It’s easy to produce good-looking documentation from the comments in source code, and we recommend adding comments to
+modules and exported functions to give other developers a leg up when they come to use it.
+Restrict your non-API commenting to discussing why something is done, its purpose and its goal. The code already
+shows how it is done, so commenting on this is redundant—and is a violation of the DRY principle.
+
+**Online Communication tips**
+
+Our tips are simple:
+
+- Proofread before you hit **SEND**.
+- Check your spelling and look for any accidental autocorrect mishaps.
+- Keep the format simple and clear.
+- Keep quoting to a minimum.
+- No one likes to receive back their own 100-line email with "I agree" tacked on. If you’re quoting other people’s
+  email, be sure to attribute it, and quote it inline (rather than as an attachment). Same when quoting on social media
+  platforms.
+- Don’t flame or act like a troll unless you want it to come back and haunt you later. If you wouldn’t say it to
+  someone’s face, don’t say it online.
+- Check your list of recipients before sending. It’s become a cliché to criticize the boss over departmental email
+  without realizing that the boss is on the cc list. Better yet, don’t criticize the boss over email.
+
+As countless large corporations and politicians have discovered, email and social media posts are forever. Try to give
+the same attention and care to email as you would to any written memo or report.
+
+## 2 A Pragmatic Approach
+
+### The Essence of Good Design
+
+#### Tip 14 Good Design Is Easier to Change Than Bad Design
+
+ETC - easier to change - principle
+every design principle out there is a special case of ETC.
+Why is decoupling good? Because by isolating concerns we make each easier to change. ETC.
+Why is the single responsibility principle useful? Because a change in requirements is mirrored by a change in just one
+module. ETC.
+Why is naming important? Because good names make code easier to read, and you have to read it to change it. ETC!
+
+**ETC Is a Value, Not a Rule**
+
+Deliberately ask yourself "did the thing I just did make the overall system easier or harder to change?" Do it when you
+save a file. Do it when you write a test. Do it when you fix a bug.
+It assumes that a person can tell which of many paths will be easier to change in the future. Much of the time, common
+sense will be correct, and you can make an educated guess.
+If you're still not sure which is the best solution, you can:
+
+- Try to make the code you write replaceable
+- treat this as a way to develop instincts.Note the situation in your engineering day book: the choices you have, and
+  some guesses about change. Leave a tag in the source. Then, later, when this code has to change, you’ll be able to
+  look back and give yourself feedback. It might help the next time you reach a similar fork in the road.
+
+### 9 DRY - The Devils of Duplication
+
+Most people assume that maintenance begins when an application is released, that maintenance means fixing bugs and
+enhancing features. We think these people are wrong. Programmers are constantly in maintenance mode. Our understanding
+changes day by day. New requirements arrive and existing requirements evolve as we’re heads-down on the project. Perhaps
+the environment changes. Whatever the reason, maintenance is not a discrete activity, but a routine part of the entire
+development process.
+
+We feel that the only way to develop software reliably, and to make our developments easier to understand and maintain,
+is to follow what we call the **DRY principle**:
+
+DRY - Don't Repeat Yourself - _Every piece of knowledge must have a single, unambiguous, authoritative representation
+within a system._
+
+Don’t copy-and-paste lines of source is only a part of DRY.
+
+DRY is about the duplication of knowledge, of intent. It’s about expressing the same thing in two different places,
+possibly in two totally different ways.
+
+Here’s the acid test: when some single facet of the code has to change, do you find yourself making that change in
+multiple places, and in multiple different formats? Do you have to change code and documentation, or a database schema
+and a structure that holds it, or…? If so, your code isn’t DRY.
+
+**Not All Code Duplication Is Knowledge Duplication**
+
+Not All Code Duplication Is Knowledge Duplication As part of your online wine ordering application you’re capturing and
+validating your user’s age, along with the quantity they’re ordering. According to the site owner, they should both be
+numbers, and both greater than zero. So you code up the validations:
+
+``` python
+def validate_age(value): 
+  validate_type(value, :integer) 
+  validate_min_integer(value, 0)
+
+def validate_quantity(value): 
+  validate_type(value, :integer) 
+  validate_min_integer(value, 0)
+```
+
+The code is the same, but the knowledge they represent is different. The two functions validate two separate things that
+just happen to have the same rules. That’s a coincidence, not a duplication.
+
+#### 1. DRY Violation in Documentation
+
+Don't repeat the intent of the function in the comment. Try to write the function and names in a way that it's self
+expressing.
+
+#### 2. DRY Violation in Data
+
+```java
+class Line {
+    Point start;
+    Point end;
+    double length;
+}
+```
+
+we have duplication. The length is defined by the start and end points: change one of the points and the length changes.
+It’s better to make the length a calculated field:
+
+```java
+class Line {
+    Point start;
+    Point end;
+
+    double length() {
+        return star.distanceTo(end);
+    }
+}
+```
+
+It's OK to violate the DRY principle fo performance reasons. e.g. caching the data.
+Where possible, always use accessor functions to read and write the attributes of objects. It will make it easier to add
+functionality in the future.
+
+_All services offered by a module should be available through a uniform notation, which does not betray whether they are
+implemented through storage or through computation._
+
+#### 2. DRY Violation in Representation
+
+Your code needs to know how to communicate with libraries, API or the schemas (e.g. error codes).
+The duplication here is that two things (your code and the external entity) have to have knowledge of the representation
+of their interface. Change it at one end, and the other end breaks.
+Some strategies:
+**Duplication across internal API** - look for tools that let you specify the API in some kind of neutral format. These
+tools will typically generate documentation, mock APIs, functional tests, and API clients, the latter in a number of
+different languages. Ideally the tool will store all your APIs in a central repository, allowing them to be shared
+across teams.
+
+**Duplication Across External APIs** - Increasingly, you’ll find that public APIs are documented formally using
+something like OpenAPI.This allows you to import the API spec into your local API tools and integrate more reliably
+with the service. If you can’t find such a specification, consider creating one and publishing it. Not only will others
+find it useful; you may even get help maintaining it.
+
+**Duplication with Data Sources** - Many data sources allow you to introspect on their data schema. This can be used to
+remove much of the duplication between them and your code. Rather than manually creating the code to contain this stored
+data, you can generate the containers directly from the schema. Many persistence frameworks will do this heavy lifting
+for you.
+There’s another option, and one we often prefer. Rather than writing code that represents external data in a
+fixed structure (an instance of a struct or class, for example), just stick it into a key/value data structure (your
+language might call it a map, hash, dictionary, or even object). On its own this is risky: you lose a lot of the
+security of knowing just what data you’re working with. So we recommend adding a second layer to this solution: a simple
+table-driven validation suite that verifies that the map you’ve created contains
+
+**Inter-developer Duplication** - at the module level, the problem is more insidious. Commonly needed functionality or
+data that doesn’t fall into an obvious area of responsibility can get implemented many times over.
+We feel that the best way to deal with this is to encourage active and frequent communication between developers. Maybe
+run a daily scrum standup meeting. Set up forums (such as Slack channels) to discuss common problems. This provides a
+non-intrusive way of communicating—even across multiple sites—while retaining a permanent history of everything said.
+Appoint a team member as the project librarian, whose job is to facilitate the exchange of knowledge. Have a central
+place in the source tree where utility routines and scripts can be deposited. And make a point of reading other people’s
+source code and documentation, either informally or during code reviews. You’re not snooping—you’re learning from them.
+And remember, the access is reciprocal—don’t get twisted about other people poring (pawing?) through your code, either.
+
 ## 6 Concurrency
 
 definition:<br>
@@ -220,7 +578,7 @@ _Time pressure is often used as an excuse for not refactoring. But this excuse j
 now, and there’ll be a far greater time investment to fix the problem down the road—when there are more dependencies to
 reckon with. Will there be more time available then? Nope._
 
-When explaining think of the code that needs refactoring as “a growth.” Removing it requires invasive surgery. You can
+When explaining think of the code that needs refactoring as "a growth." Removing it requires invasive surgery. You can
 go in now, and take it out while it is still small. Or, you could wait while it grows and spreads—but removing it then
 will be both more expensive and more dangerous. Wait even longer, and you may lose the patient entirely.
 
@@ -311,7 +669,7 @@ principles that you should always bear in mind:
 
 ### 44 Naming Things
 
-whenever you create something, you need to pause and think “what is my motivation to create this?”
+whenever you create something, you need to pause and think "what is my motivation to create this?"
 
 It’s important that everyone on the team knows what project jargon means, and that they use them consistently.
 
@@ -421,7 +779,7 @@ It allows to build end-to-end functionality in small pieces.
 
 ### 50 Coconut don't cut it
 
-The goal of course isn’t to “do Scrum,” “do agile,” “do Lean,” or what-have-you. The goal is to be in a position to
+The goal of course isn’t to "do Scrum," "do agile," "do Lean," or what-have-you. The goal is to be in a position to
 deliver working software that gives the users some new capability at a moment’s notice. Not weeks, months, or years from
 now, but now. For many teams and organizations, continuous delivery feels like a lofty, unattainable goal, especially if
 you’re saddled with a process that restricts delivery to months, or even weeks. But as with any goal, the key is to keep
@@ -444,7 +802,7 @@ against them:
 - Make sure everyone on the team is totally clear about these expectations.
 - When making decisions, think about which path forward moves closer to those expectations.
 - Critically analyze the user requirements in light of the expectations. On many projects we’ve discovered that the
-  stated “requirement” was in fact just a guess at what could be
+  stated "requirement" was in fact just a guess at what could be
   done by technology: it was actually an amateur implementation plan dressed up as a requirements document. Don’t be
   afraid to make suggestions that change the requirement if you can demonstrate that they will move the project closer
   to
@@ -454,22 +812,23 @@ against them:
 ### 53 Pride and Prejudice
 
 You shouldn’t jealously defend your code against interlopers; by the same token, you should treat other people’s code
-with respect. The Golden Rule (“Do unto others as you would have them do unto you’’) and a foundation of mutual respect
+with respect. The Golden Rule ("Do unto others as you would have them do unto you") and a foundation of mutual respect
 among the developers is critical to make this tip work.
-We want to see pride of ownership. “I wrote this, and I stand behind my work.” Your signature should come to be
+We want to see pride of ownership. "I wrote this, and I stand behind my work." Your signature should come to be
 recognized as an indicator of quality. People should see your name on a piece of code and expect it to be solid, well
 written, tested, and documented. A really professional job. Written by a professional.
 
 ## 10 Postface
 
-Many nonembedded systems can also do both great good and great harm. Social media can promote peaceful revolution or
+Many non-embedded systems can also do both great good and great harm. Social media can promote peaceful revolution or
 foment ugly hate. Big data can make shopping easier, and it can destroy any vestige of privacy you might think you have.
 Banking systems make loan decisions that change people’s lives. And just about any system can be used to snoop on its
 users. We’ve seen hints of the possibilities of a utopian future, and examples of unintended consequences leading to
-nightmare dystopias. The difference between the two outcomes might be more subtle than you think. And it’s all in your
+nightmare dystopia. The difference between the two outcomes might be more subtle than you think. And it’s all in your
 hands.
 
-We have a duty to ask ourselves two questions about every piece of code we deliver: 
-1. Have I protected the user? 
+We have a duty to ask ourselves two questions about every piece of code we deliver:
+
+1. Have I protected the user?
 2. Would I use this myself?
 
