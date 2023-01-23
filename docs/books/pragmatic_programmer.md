@@ -358,6 +358,189 @@ place in the source tree where utility routines and scripts can be deposited. An
 source code and documentation, either informally or during code reviews. You’re not snooping—you’re learning from them.
 And remember, the access is reciprocal—don’t get twisted about other people poring (pawing?) through your code, either.
 
+### 10 Orthogonality
+
+"Orthogonality" is a term borrowed from geometry. Two lines are orthogonal if they meet at right angles, such as the
+axes on a graph. It's generalization of the geometric notion of perpendicularity.
+In computing, the term has come to signify a kind of independence or decoupling. Two or more things are
+orthogonal if changes in one do not affect any of the others.
+
+We want to design components that are self-contained: independent, and with a single, well-defined purpose (what Yourdon
+and Constantine call cohesion in Structured Design: Fundamentals of a Discipline of Computer Program and Systems
+Design[YC79]). When components are isolated from one another, you know that you can change one without having to worry
+about the rest. As long as you don’t change that component’s external interfaces, you can be confident that you won’t
+cause problems that ripple through the entire system.
+
+Two major benefits if you write orthogonal systems:
+
+1. increased productivity - It is easier to write relatively small, self-contained components than a single large block
+   of code. Simple components can be designed, coded, tested, and then forgotten—there is no need to keep changing
+   existing code as you add new code.
+1. reduced risk - Diseased sections of code are isolated. If a module is sick, it is less likely to spread the symptoms
+   around the rest of the system. It is also easier to slice it out and transplant in something new and healthy.
+
+Most developers are familiar with the need to design orthogonal systems, although they may use words such as modular,
+component-based, and layered to describe the process.
+
+Orthogonality is closely related to the DRY principle. With DRY, you’re looking to minimize duplication within a system,
+whereas with orthogonality you reduce the interdependency among the system’s components. It may be a clumsy word, but if
+you use the principle of orthogonality, combined closely with the DRY principle, you’ll find that the systems you
+develop are more flexible, more understandable, and easier to debug, test, and maintain.
+
+### 11 Reversibility
+
+What you can do is make it easy to change. Hide third-party APIs behind your own abstraction layers. Break your code
+into components: even if you end up deploying them on a single massive server, this approach is a lot easier than taking
+a monolithic application and splitting it.
+
+### 12 Tracer Bullets
+
+the term tracer bullet development is used to visually illustrate the need for immediate feedback under actual
+conditions with a moving goal.
+
+Tracer bullets work because they operate in the same environment and under the same constraints as the real bullets.
+They get to the target fast, so the gunner gets immediate feedback. And from a practical standpoint they’re a relatively
+cheap solution.
+Look for the important requirements, the ones that define the system. Look for the areas where you have doubts, and
+where you see the biggest risks. Then prioritize your development so that these are the first areas you code.
+Tracer code is not disposable: you write it for keeps. It contains all the error checking, structuring, documentation,
+and self-checking that any piece of production code has. It simply is not fully functional. However, once you have
+achieved an end-to-end connection among the components of your system, you can check how close to the target you are,
+adjusting if necessary. Once you’re on target, adding functionality is easy.
+Tracer development is consistent with the idea that a project is never finished: there will always be changes required
+and functions to add. It is an incremental approach.
+
+The tracer code approach has many advantages:
+
+- Users get to see something working early - your users will know they are seeing something immature. They won’t be
+  disappointed by a lack of functionality; they’ll be ecstatic to see some visible progress toward their system.
+- Developers build a structure to work in - it. If you have worked out all the end-to-end interactions of your
+  application, and have embodied them in code, then your team won’t need to pull as much out of thin air. This makes
+  everyone more productive, and encourages consistency.
+- You have an integration platform - have an integration platform As the system is connected end-to-end, you have an
+  environment to which you can add new pieces of code once they have been unit-tested.
+- You have something to demonstrate
+- You have a better feel for progress
+
+**Tracer Code versus Prototyping**
+You might think that this tracer code concept is nothing more than prototyping under an aggressive name. There is a
+difference. With a prototype, you’re aiming to explore specific aspects of the final system. With a true prototype, you
+will throw away whatever you lashed together when trying out the concept, and recode it properly using the lessons
+you’ve learned. The tracer code approach addresses a different problem. You need to know how the application as a whole
+hangs together. You want to show your users how the interactions will work in practice, and you want to give your
+developers an architectural skeleton on which to hang code.
+
+### 13 Prototypes and Post-it Notes
+
+What sorts of things might you choose to investigate with a prototype?
+
+- Anything that carries risk.
+- Anything that hasn’t been tried before,
+- Anything that is absolutely critical to the final system.
+- Anything unproven, experimental, or doubtful.
+- Anything you aren’t comfortable with.
+
+You can prototype:
+
+- Architecture
+- New functionality in an existing system
+- Structure or contents of external data
+- Third-party tools or components
+- Performance issues
+- User interface design
+
+Prototyping is a learning experience. Its value lies not in the code produced, but in the lessons learned. That’s really
+the point of prototyping.
+
+**How to Use Prototypes**
+When building a prototype, what details can you ignore?
+
+**Correctness**
+You may be able to use dummy data where appropriate.
+
+**Completeness**
+The prototype may function only in a very limited sense, perhaps with only one preselected piece of input data and one
+menu item.
+
+**Robustness**
+Error checking is likely to be incomplete or missing entirely. If you stray from the predefined path, the prototype may
+crash and burn in a glorious display of pyrotechnics. That’s okay.
+
+**Style**
+Prototype code shouldn’t have much in the way of comments or documentation (although you may produce reams of
+documentation as a result of your experience with the prototype).
+
+### 14 Domain Languages
+
+We always try to write code using the vocabulary of the application domain (see Maintain a Glossary). In some cases,
+Pragmatic Programmers can go to the next level and actually program using the vocabulary, syntax, and semantics—the
+language—of the domain.
+E.g. Cucumber is programming-language neutral way of specifying tests. You run the tests using a version of Cucumber
+appropriate to the language you’re using. In order to support the natural-language like syntax, you also have to write
+specific matchers that recognize phrases and extract parameters for the tests.
+
+### 15 Estimating
+
+| Duration  	  |      Quote estimate in          	      |
+|:------------:|:--------------------------------------:|
+| 1-15 days  	 |         Days                 	         |
+| 3-6 weeks  	 | Weeks                                	 |
+| 8-20 weeks 	 | Months                               	 |
+| 20+ weeks  	 | Think hard before giving an estimate 	 |
+
+**Where Do Estimates Come From?**
+Ask someone who’s already done it. Before you get too committed to model building, cast around for someone
+who’s been in a similar situation in the past. See how their problem got solved.
+
+**Understand What’s Being Asked**
+You need to have a grasp of the scope of the domain. Often this is implicit in the question, but you need to make it a
+habit to think about the scope before starting to guess. Often, the scope you choose will form part of the answer you
+give: "Assuming there are no traffic accidents and there’s gas in the car, I should be there in 20 minutes."
+
+**Build a Model of the System**
+From your understanding of the question being asked, build a rough-and-ready bare-bones mental model.
+Building the model introduces inaccuracies into the estimating process. This is inevitable, and also beneficial. You are
+trading off model simplicity for accuracy. Doubling the effort on the model may give you only a slight increase in
+accuracy. Your experience will tell you when to stop refining.
+
+**Break the Model into Components**
+Once you have a model, you can decompose it into components. You’ll need to discover the mathematical rules that
+describe how these components interact. Sometimes a component contributes a single value that is added into the result.
+You’ll find that each component will typically have parameters that affect how it contributes to the overall model. At
+this stage, simply identify each parameter.
+
+**Give Each Parameter a Value**
+Once you have the parameters broken out, you can go through and assign each one a value. You expect to introduce some
+errors in this step. The trick is to work out which parameters have the most impact on the result, and concentrate on
+getting them about right. Typically, parameters whose values are added into a result are less significant than those
+that are multiplied or divided.
+
+**Calculate the Answers**
+A spreadsheet can be a big help. Then couch your answer in terms of these parameters.
+During the calculation phase, you get answers that seem strange. Don’t be too quick to dismiss them. If your arithmetic
+is correct, your understanding of the problem or your model is probably wrong. This is valuable information.
+
+**Keep Track of Your Estimating Prowess**
+We think it’s a great idea to record your estimates, so you can see how close you were. If an overall estimate involved
+calculating sub-estimates, keep track of these as well. Often you’ll find your estimates are pretty good—in fact, after
+a
+while, you’ll come to expect this.
+
+#### Estimating Project Schedules -Painting the Missile
+
+"How long will it take to paint the house?" "Well, if everything goes right, and this paint has the coverage they claim,
+it might be as few as 10 hours. But that’s unlikely: I’d guess a more realistic figure is closer to 18 hours. And, of
+course, if the weather turns bad, that could push it out to 30 or more."
+
+That’s how people estimate in the real world. Not with a single number (unless you force them to give you one) but with
+a range of scenarios.
+
+#### What to Say When Asked for an Estimate
+
+You say “I’ll get back to you.” You almost always get better results if you slow the process down and spend some time
+going through the steps we describe in this section. Estimates given at the coffee machine will (like the coffee) come
+back to haunt you.
+
 ## 6 Concurrency
 
 definition:<br>
