@@ -523,8 +523,7 @@ is correct, your understanding of the problem or your model is probably wrong. T
 **Keep Track of Your Estimating Prowess**
 We think it’s a great idea to record your estimates, so you can see how close you were. If an overall estimate involved
 calculating sub-estimates, keep track of these as well. Often you’ll find your estimates are pretty good—in fact, after
-a
-while, you’ll come to expect this.
+a while, you’ll come to expect this.
 
 #### Estimating Project Schedules -Painting the Missile
 
@@ -541,6 +540,241 @@ You say “I’ll get back to you.” You almost always get better results if yo
 going through the steps we describe in this section. Estimates given at the coffee machine will (like the coffee) come
 back to haunt you.
 
+## 3 The Basic Tools
+
+As a developer you need to know the set of tools you should be using in your work to be efficient.
+
+### 16 The Power of Plain Text
+
+**Keep Knowledge in Plain Text**
+
+Plain text doesn’t mean that the text is unstructured; HTML, JSON, YAML, and so on are all plain text. So are the
+majority of the fundamental protocols on the net, such as HTTP, SMTP, IMAP, and so on. And that’s for some good reasons:
+
+- Insurance against obsolescence - human-readable (and human understandable!) forms of data and self-describing data
+  will outlive all other forms of
+  data and the applications that created them.
+- Leverage existing tools - virtually every tool can work with plain text
+- Easier testing
+
+### 17 Shell Games
+
+Every programmer needs to manipulate files of text for that purpose we should learn command shell.
+From the shell prompt you can invoke your full repertoire of tools, using pipes, to combine them in ways never dreamt
+of by their original developers. From shell, you can launch applications, debuggers, browsers, editors and utilities.
+You
+can search for files, query the status of the system and filter output.
+
+If you can do everything inside your IDE with UI why would you need it?
+A benefit of GUI is WYSIWYG - What You See Is What You Get.
+The disadvantage is WYSIAYG - What You See Is All You Get.
+
+#### Tip 26 Use the power of Command Shells
+
+Make sure to configure and customize shell to your needs:
+
+- setting color themes
+- configuring a prompt
+- aliases and shell functions
+- command completion
+
+### 18 Power Editing
+
+**Achieve Editor Fluency**
+
+Here’s the challenge list (without using mouse/trackpad):
+
+- When editing text, move and make selections by character, word, line, and paragraph.
+- When editing code, move by various syntactic units (matching delimiters, functions, modules, …).
+- Reindent code following changes.
+- Comment and uncomment blocks of code with a single command.
+- Undo and redo changes.
+- Split the editor window into multiple panels, and navigate between them.
+- Navigate to a particular line number.
+- Sort selected lines.
+- Search for both strings and regular expressions, and repeat previous searches.
+- Temporarily create multiple cursors based on a selection or on a pattern match, and edit the text at each in parallel.
+- Display compilation errors in the current project.
+- Run the current project’s tests.
+
+### 19 Version Control
+
+Always Use Version Control - not only for code repositories. For Everything: notes, prototype, configuration, system
+settings
+
+### 20 Debugging
+
+Embrace the fact that debugging is just problem-solving and attack it as such.
+
+**A debugging mindset**
+
+- don't panic, think about what could be causing the symptoms that you believe indicate a bug.
+- Before you start to look at the bug make sure that you are working on code that built cleanly - without warnings.
+- gather all relevant data
+- talk/interview to reported, go together though the issue if you can't reproduce it.
+
+**Debugging Strategies**
+
+1. Failing Test Before Fixing Code
+2. Read the Damn Error Message!
+3. Make sure that you also see incorrect value in the debugger
+4. Jot down notes, when you find a clue and chase it down only to find it didn't pan out - it would be easier to come
+   back to where you were before.
+5. If it is an input values problem recreate it on full list and start chopping it.
+6. Use the Binary Chop when going through stack trace to find the root of the issue
+7. Use logging
+8. Talk to rubber Duck
+9. Use Process of Elimination - if you changed one thing which looks not related to the problem at glance, double check
+   it because you might be wrong.
+10. Don't assume, prove it.
+11. Make sure it won't repeat. Fix Unit Tests, mend them, analyze the data, check other places in the code where it can
+    happen.
+
+### 21 Text manipulation
+
+Learn a Text Manipulation Language.
+On Linux (or Mac) users often use tools such as awk and sed.
+Sometimes Python, Ruby, Perl.
+Ruby and Python were used to create a pragmatic Programmer book:
+
+- Building the book - the build system for the bookshelf is written in Ruby. Authors, editors, layout people and support
+  folk use Rake tasks to coordinate the building of PDFs and ebooks.
+- Code inclusion and highlighting - the source codes examples in books are taken from repository to follow the DRY
+  principle.
+- Website update - simple script that does a partial book build, extracts the table of contents, then uploads it to the
+  book's page on our website.
+- Including equations - Python script that converts LaTeX math markup into formatted text.
+- Index Generation - indexes are created as separate documents. Ruby script collates and formats the entries.
+
+### 22 Engineering Daybooks
+
+We use daybooks to take notes in meetings, to jot down what we’re working on, to note variable values when debugging, to
+leave reminders where we put things, to record wild ideas, and sometimes just to doodle.
+
+The daybook has three main benefits:
+
+- It is more reliable than memory. People might ask “What was the name of that company you called last week
+  about the power supply problem?” and you can flip back a page or so and give them the name and number.
+- It gives you a place to store ideas that aren’t immediately relevant to the task at hand. That way you can continue to
+  concentrate on
+  what you are doing, knowing that the great idea won’t be forgotten.
+- It acts as a kind of rubber duck (described here). When you stop to write something down, your brain may switch gears,
+  almost as if talking to someone—a great chance to reflect. You may start to make a note and then suddenly realize that
+  what you’d just done, the topic of the note, is just plain wrong. There’s an added benefit, too. Occasionally you can
+  look back at what you were doing oh-so-many-years-ago and think about the people, the projects, and the awful clothes
+  and hairstyles.
+
+## 4 Pragmatic Paranoia
+
+#### Tip 36 you can't write perfect software
+
+Perfect software doesn't exist, don't waste time and energy chasing an impossible dream.
+How to turn it into an advantage?
+
+If you think that someone code might not live up to your standards, don't trust your code either - no one writes perfect
+code.
+
+### 23 Design by Contract
+
+DBC - Design By Contract - technique that focuses on documenting the rights and responsibilities of software modules to
+ensure program correctness.
+What is correct program? One that does no more and no less than it claims to do.
+Documenting and verifying that claim is the role of DBC.
+
+Every function does _something_ - Before it starts doing _something_ it might have expectations of the state, and also
+it can modify that state.
+These expectations and claims are:
+
+1. Pre-conditions - what must be true in order for the function to be called (it's the caller responsibility to pass
+   good data)
+2. Post-conditions - what function is guaranteed to do. - the state when the function is done.
+3. Class invariants / state - class ensures that _this_ condition is always true from the perspective of a caller.
+
+So the contract between the caller and module is:
+_If all function’s preconditions are met by the caller, the function shall guarantee that all post conditions and
+invariants will be true when it completes._
+
+If something is not as in contract the remedy is to raise exception.
+Or Even better disable the possibility to call the function with wrong values.
+E.g. on Android you can use `@StringRes` which indicates that the Int value needs to come from android resources.
+Be strict in what you will accept before you begin, promise as little as possible in return.
+
+**Implementing DBC**<br>
+Simply enumerating what the input domain range is, what the boundary conditions are, and what the
+routine promises to deliver.
+
+**Assertions**
+you can get much greater benefit by having the compiler check your contract for you. You can partially emulate this in
+some languages by using assertions: runtime checks for logical conditions.
+
+**Who is responsible for checking the preconditions, the caller or the method being called?**<br>
+When DBC is implemented by the language - neither. it's tested behind the scene after caller invokes the method but
+before the mother runs. If there is any explicit checking of parameters to be done, it must be performed by the _caller_
+because the method will
+never see parameters that violate its precondition. <br>
+For non-supporting DBC languages you need to bracket the called method with preamble and/or post-amble that checks these
+assertions.
+
+Consider a program that reads a number from the console, calculates its square root (by calling sqrt), and prints the
+result. The sqrt function has a precondition—its argument must not be negative. If the user enters a negative number at
+the console, it is up to the calling code to ensure that it never gets passed to sqrt. This calling code has many
+options: it could terminate, it could issue a warning and read another number, or it could make the number positive and
+append an i to the result returned by sqrt. Whatever its choice, this is definitely not sqrt’s problem. By expressing
+the domain of the square root function in the precondition of the sqrt routine, you shift the burden of correctness to
+the caller—where it belongs. You can then design the sqrt routine secure in the knowledge that its input will be in
+range.
+
+Crashing Early gives you possibility to report more accurate information about the problem.
+
+### 24 Dead Programs Tell No Lies
+
+**Catch and release is for fish**
+
+avoid using try-catch to catch all possible errors.
+
+1. The application code isn't eclipsed by the error code.
+1. The code is less coupled. If the writer of the method adds another exception our code is subtly out of date. Without
+   try catch it's propagated.
+
+same—when your code discovers that something that was supposed to be impossible just happened, your program is no longer
+viable. Anything it does from this point forward becomes suspect, so terminate it as soon as possible.
+
+### 25 Assertive Programming
+
+#### Tip 39 Use Assertions to prevent the impossible
+
+In the Java implementation, you can (and should) add a descriptive string:
+
+```
+assert result! = null && result.size() > 0 : "Empty result from XYZ";
+```
+
+**Don’t use assertions in place of real error handling.** Assertions check for things that should never happen.
+Your first line of defense is checking for any possible error, and your second is using assertions to try to detect
+those you’ve missed.
+
+### 26 Hot to Balance Resources
+
+The function that allocates a resource should be responsible for deallocating it.
+Deallocate resources with LIFO principle.
+When allocating the same set of resource in different places in your code, always allocate them in the same order to
+avoid deadlock.
+
+There are times when the basic resource allocation pattern just isn’t appropriate. Commonly this is found in programs
+that use dynamic data structures. One routine will allocate an area of memory and link it into some larger structure,
+where it may stay for some time.
+
+The trick here is to establish a semantic invariant for memory allocation. You need to decide who is responsible for
+data in an aggregate data structure. What happens when you deallocate the top-level structure? You have three main
+options:
+
+1. The top-level structure is also responsible for freeing any substructures that it contains. These structures then
+   recursively delete data they contain, and so on.
+2. The top-level structure is simply deallocated. Any structures that it pointed to (that are not referenced elsewhere)
+   are orphaned.
+3. The top-level structure refuses to deallocate itself if it contains any substructures.
+
+### 27 Don't Outrun Your Headlights
 ## 6 Concurrency
 
 definition:<br>
