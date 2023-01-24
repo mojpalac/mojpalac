@@ -775,6 +775,208 @@ options:
 3. The top-level structure refuses to deallocate itself if it contains any substructures.
 
 ### 27 Don't Outrun Your Headlights
+
+#### Tip 42 Always take small steps
+
+Always take small, deliberate steps, checking for feedback and adjusting before proceeding. Consider that the rate of
+feedback is your speed limit. You never take on a step or a task that’s “too big.”<br>
+What do we mean exactly by feedback?
+Anything that independently confirms or disproves your action. For example:
+
+- Results in a REPL provide feedback on your understanding of APIs and algorithms
+- Unit tests provide feedback on your last code change
+- User demo and conversation provide feedback on features and usability
+
+What's a task that's too big? Any task that requires "fortune-telling".
+We can only see into the future perhaps one or two steps, maybe a few hours or days at most. From that you can quickly
+past educated guess into wild speculation.
+When the fortune-telling starts?
+
+- estimate completion dates months in the future
+- Plan a design for future maintenance or extendability
+- Guess user's future needs
+- Guess future tech availability
+
+you should design for future maintenance but only to a point - only as far ahead as you can see.
+
+## 5 Bend, or break
+
+### 28 Decoupling
+
+#### Tip 44 Decoupled Code is easier to change
+
+symptoms of coupling:
+
+- wacky dependencies between unrelated modules or libraries
+- "simple" changes to one module that propagate through unrelated modules in the system or break stuff elsewhere in the
+  system
+- developers who are afraid to change code because they aren't sure what might be affected.
+- meeting where everyone has to attend because no one is sure who will be affected by a change
+
+#### types of coupling:
+
+1. Train wrecks - chains of method calls
+2. Globalization - the dangers of static things
+3. Inheritance - why subclassing is dangerous
+
+##### Train wrecks
+
+We’ve all seen (and probably written) code like this:
+
+```
+public void applyDiscount(customer, order_id, discount) {
+    totals = customer
+        .orders 
+        .find(order_id) 
+        .getTotals(); 
+    totals.grandTotal = totals.grandTotal - discount;
+    totals.discount   = discount;
+}
+```
+
+This chunk of code is traversing five levels of abstraction from customer to total amount.
+Ultimately our top-level code has to know that a customer object exposes orders, that the orders have a find method that
+takes an order id and returns an order, and that the order object has a totals object which has getters and setters for
+grand totals and discounts.
+That's a lof of implicit knowledge. But worse, that's a lot of things that cannot change in the future if this code is
+to continue to work.
+All the cars in a train are coupled together as are all the methods and attributes in a train wreck.
+
+How to fix? use **Tell, don't ask**.
+
+TDA - you shouldn't make decision based on the internal state of an object and then update that object.
+It destroys the benefit of encapsulation and in doing so spreads the knowledge of the implementation throughout the
+code.
+
+proper solution
+
+```
+public void applyDiscount(customer, order_id, discount) {
+    customer
+        .findOrder(order_id) 
+        .applyDiscount(discount); 
+}
+```
+
+alternative you could try to create `applyDiscountToOrder(order_id)`, but TDA is just a pattern if you think (or it's
+required anyway)
+to expose the customer has orders, and we can find it, then it is pragmatic decision.
+
+**The Law Of Demeter, LoD** - set of guidelines that help developers keep their functions cleaner and decoupled.
+
+The LoD says that a method defined in a class C should only call:
+
+- Other instance methods in C
+- Its parameters
+- Methods in objects that it creates, both on the stack and in the heap
+- Global variables
+
+simpler recommended version is:
+**Don't Chain Method Calls**
+
+```kotlin
+// poor style
+val amount = customer.orders.last().totals().amount
+
+// and so is this
+val orders = customer.orders
+val last = order.last()
+val totals = last.totals()
+val amount = totals.amount
+```
+
+Big exception to the one-dot rule: the rule doesn't apply if the things you're chaining are really, really unlikely to
+change.
+In practice, anything in your application should be considered likely to change. Anything in a third-party library
+should be considered volatile, particularly if the maintainers of the library are known to change API between releases.
+Libraries that come with the language however are probably pretty stable, and we would be happy with the code such as.
+
+```kotlin
+people.sortBy { it.age }
+    .first(10)
+    .map { it.name }
+```
+
+##### The Evils of Globalization
+
+Globals couple code for many reasons. The most obvious is that a change to the implementation of the global potentially
+affects all the code in the system. In practice, of course, the impact is fairly limited; the problem really comes down
+to knowing that you’ve found every place you need to change. Global data also creates coupling when it comes to teasing
+your code apart.
+You’ll see this problem when you’re writing unit tests for code that uses global data. You’ll find yourself writing a
+bunch of setup code to create a global environment just to allow your test to run.
+
+**If It’s Important Enough to Be Global, Wrap It in an API**<br>
+Always use abstraction to represent global data (if you can't avoid having global one), same applies for third-party
+library.
+
+##### Inheritance adds coupling
+
+It's so important that it has separate topic [31]
+
+### 29 Juggling the Real World
+
+Events are everywhere. Some are obvious: a button click, a timer expiring. Other are less so: someone logging in, a line
+in a file matching a pattern. But whatever their source, code that’s crafted around events can be more responsive and
+better decoupled than its more linear counterpart.
+
+Strategies to handle the events:
+
+1. Finite State Machines
+2. The Observer Pattern
+3. Publish/Subscribe
+4. Reactive Programming and Streams
+
+#### Finite State Machines
+
+State machine is basically just a specification of _how_ to handle events.
+It consists of a set of states, one of which is the current state.
+For each state we list the events that are significant to that state.
+For Each of those event we define new current state of the system.
+
+Stet machines are underused by developers. Though they don't solve all the problems associated with events.
+
+#### The Observer Pattern
+
+Observable - source of events
+Observers - clients who are interested in those events.
+
+observer registers its interest with the observable typically by passing a reference to a function to be called.
+
+It is particularly prevalent in user interface system where the callbacks are used to inform the application that some
+interaction has occurred.
+**But it introduces coupling**! also it can introduce performance bottlenecks. (both solved by Publish/Subscribe
+pattern).
+
+#### Publish/Subscribe
+
+it generalizes the observer pattern, at the same time solves the problems of coupling and performance.
+
+We have publishers and subscribers, these are connected via **channels**.
+The channels are implemented in a separate body of code: sometimes a library, sometimes a process, and sometimes a
+distributed infrastructure. All this implementation detail is hidden from your code.
+Every channel has a name. Subscribers register interest in one or more of these named channels, and publishers write
+events to them. Unlike the observer pattern, the communication between the publisher and subscriber is handled outside
+your code, and is potentially asynchronous.
+PubSub modules are provided in language as library.
+
+Compared to the observer pattern, pubsub is a great example of reducing coupling by abstracting up through a shared
+interface (the channel). However, it is still basically just a message passing system.
+
+#### Reactive Programming, Streams and Events
+
+If you’ve ever used a spreadsheet, then you’ll be familiar with reactive programming. If a cell contains a formula which
+refers to a second cell, then updating that second cell causes the first to update as well. The values react as the
+values they use change.
+
+Streams allow us treat events as if they were a collection of data (list of events which gets longer when new events
+arrive).
+The beauty of that is that we can treat streams just like any other collection: we can manipulate, combine, filter, and
+do all the other data-ish things we know so well. We can even combine event streams and regular collections. And streams
+can be **asynchronous**, which means your code gets the opportunity to respond to events as they arrive.
+This is a very powerful abstraction: we no longer need to think about time as being something we have to manage. Event
+streams unify synchronous and asynchronous processing behind a common, convenient API.
+
 ## 6 Concurrency
 
 definition:<br>
