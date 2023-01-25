@@ -977,6 +977,116 @@ can be **asynchronous**, which means your code gets the opportunity to respond t
 This is a very powerful abstraction: we no longer need to think about time as being something we have to manage. Event
 streams unify synchronous and asynchronous processing behind a common, convenient API.
 
+### 30 Transforming Programming
+
+We should more often think about programs as being something that transforms inputs into outputs.
+
+This chapter talks about a way we can chain object transformations to get what we want
+
+```
+word
+|> all_subsets_longer_than_three_characters() 
+|> as_unique_signatures() 
+|> find_in_dictionary() 
+|> group_by_length()
+```
+
+_It’s simply a chain of the transformations needed to meet our requirement, each taking input from the previous
+transformation and passing output to the next. That comes about as close to literate code as you can get._
+
+But there’s something deeper, too. If your background is object-oriented programming, then your reflexes demand that you
+hide data, encapsulating it inside objects. These objects then chatter back and forth, changing each other’s state. This
+introduces a lot of coupling, and it is a big reason that OO systems can be hard to change. Tip 50 Don’t Hoard State;
+Pass It Around In the transformational model, we turn that on its head. Instead of little pools of data spread all over
+the system, think of data as a mighty river, a flow. Data becomes a peer to functionality: a pipeline is a sequence of
+code → data → code → data…. The data is no longer tied to a particular group of functions, as it is in a class
+definition. Instead, it is free to represent the unfolding progress of our application as it transforms its inputs into
+its outputs. This means that we can greatly reduce coupling: a function can be used (and reused) anywhere its parameters
+match the output of some other function. Yes, there is still a degree of coupling, but in our experience it’s more
+manageable than the OO-style of command and control. And, if you’re using a language with type checking, you’ll get
+compile-time warnings when you try to connect two incompatible things.
+
+In Language X Doesn’t Have Pipelines we wrote:
+
+```
+const content = File.read(file_name);
+const lines   = find_matching_lines(content, pattern) 
+const result  = truncate_lines
+```
+
+Many people write OO code by chaining together method calls, and might be tempted to write this as something like:
+
+```
+const result = content_of(file_name)
+  .find_matching_lines(pattern)
+  .truncate_lines() 
+```
+
+What’s the difference between these two pieces of code? Which do you think we prefer?
+
+Let’s answer the second part first: we prefer the first piece of code.
+
+In the second chunk of code, each step returns an object that implements the next function we call: the object returned
+by content_of must implement find_matching_lines,
+and so on. This means that the object returned by content_of is coupled to our code. Imagine the requirement changed,
+and we have to ignore lines starting with a # character. In the transformation style, that would be easy:
+
+```
+const content = File.read(file_name); 
+const no_comments = remove_comments(content) 
+const lines = find_matching_lines(no_comments, pattern)
+const  result = truncate_lines(lines)
+```
+
+We could even swap the order of `remove_comments` and `find_matching_lines` and it would still work.
+But in the chained style, this would be more difficult. Where should our `remove_comments` method live:
+in the object returned by content_of or the object returned by find_matching_lines?
+And what other code will we break if we change that object?
+This coupling is why the method chaining style is sometimes called a **train wreck**.
+
+### Inheritance Tax
+
+Stop using inheritance.
+
+- Inheritance is coupling. Not only is the child class coupled to the parent, the parent's parent and so on, but the
+  code that uses the child is also coupled to all the ancestors.
+- using inheritance to build types (relation) tends to create complexity.
+
+Better alternatives:
+
+- Interfaces and protocols - Prefer interfaces to express polymorphism instead of inheritance
+- Delegation - instead of trying to inherit method from some class delegate the work to class that contains the code, by
+  injecting particular object instead of inherit from it.
+- Mixins and traits - allows to share the methods between different objects
+
+### 32 Configuration
+
+Parametrize your app using external configuration.
+
+Common things you will want to put in configuration data include:
+
+- credentials for external services (database, third party APIs and so on)
+- logging levels and destinations
+- port, ip address, machine, and cluster names the app uses
+- Environment=specific validation parameters
+- Externally set parameters, such as tax tares
+- Site-specific formatting details
+- License keys
+
+Basically, anything that you know will have to change that you can express outside your main body of code and slap it
+into some configuration bucket.
+
+create thin API to access configuration files and keep it behind a Service
+benefits:
+
+- sharing configuration information
+- Configuration changes ca be made globally
+- Configuration data can be maintained via a specialized UI
+- **configuration data become dynamic**
+
+without external configuration your code is not as adaptable or flexible as it could be.
+Don't overdo it, not everything should be in config files, focus on most important things.
+
 ## 6 Concurrency
 
 definition:<br>
