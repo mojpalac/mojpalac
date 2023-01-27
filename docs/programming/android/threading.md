@@ -102,7 +102,6 @@ flowchart LR
     end
     Queue --> Looper  
   end
-  
 ```
 
 Handler.Thread has a build in Looper.
