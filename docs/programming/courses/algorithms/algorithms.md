@@ -240,3 +240,94 @@ How to check whether an N-by-N system percolates?
 When opening one new site in the percolation simulation, how many times is union() called?
 It is called for each neighboring site that is already open. There are 4 possible neighbors, but some of them may not
 already be open.
+
+### Analysing algorithms
+
+Running time (performance) of algorithm
+reasons:
+
+- **avoid performance bugs**
+-
+    - predict performance
+- compare algorithms
+- provide guarantees
+- understand theoretical basis
+
+_Use scientific method to understand performance_
+
+- **Observe** some feature of the natural world
+- **Hypothesize** a model that is consistent with the observations
+- **Predict** events using the hypothesis
+- **Verify** the predictions by making further observations
+- **Validate** by repeating until the hypothesis and observations agree
+
+Principles:
+
+- Experiments must be **reproducible**
+- Hypotheses must be **falsifiable**
+
+Question:
+Suppose that n equals 1 million.<br>
+Approximately how much faster is an algorithm that performs n lg n operations
+versus one that performs n^2 operations?<br>
+Recall that lg is the base-2 logarithm function.
+
+```
+n^2 / nlgn  // /n
+
+n / lgn //
+
+10^6 / lg 10^6
+
+2^x = 10^6
+x~20
+
+10^6 / 20 = 50 000
+```
+
+Approximately 50 000x faster
+
+### 3-SUM
+
+Given N distinct integers, how many triples sum to exactly zero?
+
+Log-log plot - allows you to receive straight line which help you to understand what is the slope of the line.
+
+Power low - each point on the straight line is equal to `aN^b`
+
+lg(T(N)) = b Lg N + c // to power?
+T(N) = fa N^b (where a = 2^c)
+
+system independent effects:
+
+- algorithm
+- Input data
+
+system dependent effects:
+
+- Hardware
+- Software
+- System
+
+### Type of analyses
+
+- best case
+- worst case
+- average case
+
+Theory of algorithms
+establish difficulty of a problem
+develop optimal approach
+e.g.
+1-SUM "Is there a 0 in the array?"
+
+Upper Bound - A specific algorithm
+Ex. Brute-force algorithm for 1-sum: look at every array entry
+Running time of the optimal algorithm for 1-Sum is O(N)
+Lower bound - Proof that no algorithm can do better
+Ex. have to examine all N entries (any unexamined one might be 0)
+Running time of optimal algorithm for 1-sum is M(N)
+
+Recall that big-Oh notation provides only an upper bound on the growth rate of a function as nn gets large. In this
+course, we primarily use tilde notation because it more accurately describes the function—it provides both an upper and
+lower bound on the function as well as the coefficient of the leading term.
