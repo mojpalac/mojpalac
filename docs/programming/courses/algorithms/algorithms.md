@@ -331,3 +331,161 @@ Running time of optimal algorithm for 1-sum is M(N)
 Recall that big-Oh notation provides only an upper bound on the growth rate of a function as nn gets large. In this
 course, we primarily use tilde notation because it more accurately describes the function—it provides both an upper and
 lower bound on the function as well as the coefficient of the leading term.
+
+## stacks
+
+stack - LIFO principle
+queue - FIFO principle
+
+stack often is implemented either:
+
+1. with usage of linked list by creating a class called Node.
+
+```java
+class LinkedStackOfStrings {
+
+    private Node first = null;
+
+    private class Node {
+        String item;
+        Node next;
+    }
+
+    public boolean isEmpty() {
+        return first == null;
+    }
+
+    public void push(String name) {
+        Node oldFirst = first;
+        first = new Node();
+        first.item = name;
+        first.next = oldFirst;
+    }
+
+    public String pop() {
+        String item = first.item;
+        first = oldFirst.next;
+        return item;
+    }
+}
+
+```
+
+2. with usage of Array - with fixed capacity
+
+```java
+public class FixedCapacityStackOfStrings {
+
+    private String[] s;
+    private int N = 0;
+
+    /*a cheat because often it's required that client doesn't know the capacity, how to solve? resizing */
+    public FixedCapacityStackOfStrings(int capacity) {
+        s = new String[capacity];
+    }
+
+    public boolean isEmpty() {
+        return N == 0;
+    }
+
+    public void push(String name) {
+        s[N++] = name;
+    }
+
+    public String pop() {
+        String name = S[--N];
+        s[N] == null; // remove reference to allow GC for recollection of memory
+        return name;
+    }
+}
+
+```
+
+3. with usage of resizing Array
+
+```java
+public class FixedCapacityStackOfStrings {
+
+  private String[] s = new String[10];
+  private int N = 0;
+
+  /*a cheat because often it's required that client doesn't know the capacity, how to solve? resizing */
+  public FixedCapacityStackOfStrings() {
+  }
+
+  public boolean isEmpty() {
+    return N == 0;
+  }
+
+  public void push(String name) {
+    if (s.length == N) {
+      resize(2 * s.length);
+    }
+    s[N++] = name;
+  }
+
+  public String pop() {
+    String name = S[--N];
+    s[N] == null; // remove reference to allow GC for recollection of memory
+    return name;
+  }
+
+  /** @noinspection RedundantSuppression*/
+  private void resize(int size) {
+    String[] copy = new String[size];
+    //noinspection ManualArrayCopy
+    for (int i = 0; i < s.length; i++) {
+      copy[i] = s[i];
+    }
+    s = copy;
+  }
+}
+
+```
+
+## queue
+
+```java
+class LinkedQueueOfStrings {
+
+    private Node first = null;
+    private Node last = null;
+
+    private class Node {
+        String item;
+        Node next;
+    }
+
+    public boolean isEmpty() {
+        return first == null;
+    }
+
+    public void enqueue(String name) {
+        Node oldLast = last;
+        last = new Node();
+        last.item = name;
+        last.next = null;
+        if (first == null) first = last;
+        else oldLast.next = last;
+
+    }
+
+    public String dequeue() {
+        String item = first.item;
+        first = first.next;
+        if (isEmpty()) last = null;
+        return item;
+    }
+}
+```
+
+## Iteration
+
+Q:What is Java `Iterable`?
+A: has a method that returns an `Iterator`.
+
+Q: What is an `Iterator`?
+A: Has methods `hasNext()` and `next()` also `remove()` (but using it is risky)
+
+Be carefully with using libraries if you don't understand what is the performance of these. 
+e.g. `java.util.Stack` returns items in FIFO order
