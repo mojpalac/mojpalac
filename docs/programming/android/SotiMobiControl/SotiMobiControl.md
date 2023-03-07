@@ -85,7 +85,8 @@ To check:
 
 We can request a permission from the user in runtime, though because it's not standard permission but [special
 permission](https://developer.android.com/guide/topics/permissions/overview#special) thus it can't grant directly in the
-app, but rather through system settings, as described in [documentation] (https://developer.android.com/training/permissions/requesting-special) <br>
+app, but rather through system settings, as described
+in [documentation](https://developer.android.com/training/permissions/requesting-special) <br>
 Once requested the permission (we can define when it's going to happen), we are going to show below screen:
 
 ![user_permission_request.png](user_permission_request.png)
@@ -97,3 +98,7 @@ to check:
 - is there a way for us to show and switch the toggle via SOTI MobiControl?
 
 ### 4. Shared Media Storage
+
+It would be probably achieve it via Shared Media Storage, but it requires user interaction for selecting the proper
+destination (granting permission for it) - per [documentation](https://developer.android.com/training/data-storage/shared/documents-files#grant-access-directory).
+So similarly to 3. but more prone to error.
