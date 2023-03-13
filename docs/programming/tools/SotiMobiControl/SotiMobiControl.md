@@ -1,5 +1,11 @@
 # Soti MobiControl
 
+## Modes
+
+### Dev Mode
+[AE]-[All]-[Orderpad]-[UK]-[All]-[CFG]-[All]-Security_WorkManaged  - remove
+[AE]-[Live]-[Orderpad]-[All]-[All]-[CFG]-[All]-Restrictions - remove
+
 ## Android 11 access external storage solutions
 
 With Android 11 apps can't access easily external storage (sd card).
@@ -101,4 +107,4 @@ to check:
 
 It would be probably achieve it via Shared Media Storage, but it requires user interaction for selecting the proper
 destination (granting permission for it) - per [documentation](https://developer.android.com/training/data-storage/shared/documents-files#grant-access-directory).
-So similarly to 3. but more prone to error.
+So similarly to 3. but more prone to error as user needs to select the proper directory.
