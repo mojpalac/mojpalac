@@ -1044,7 +1044,7 @@ in the object returned by content_of or the object returned by find_matching_lin
 And what other code will we break if we change that object?
 This coupling is why the method chaining style is sometimes called a **train wreck**.
 
-### Inheritance Tax
+### 31 Inheritance Tax
 
 Stop using inheritance.
 
