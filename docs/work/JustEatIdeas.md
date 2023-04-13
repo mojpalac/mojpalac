@@ -11,18 +11,25 @@
 
 ## Android
 
+### To Propose on next Sharing Session
 - linking JIRA ticket in github
-- why we need firebase, snagbug && kibana. Can we remove any of this, why one is better than another?
-- moving away from DataBinding and using ViewBinding
-- project structure guides & rules (architecture, naming convention, tooling)
-- storing amounts as float's
-- how are we tag/version past releases (to retrieve them when needed)
-- squash commits when merging to main for simpler commit history
-- build time on CI + cost?
+- Explicit API mode
 
+## ideas
+- moving away from DataBinding and using ViewBinding
+- why we need firebase, snagbug && kibana. Can we remove any of this, why one is better than another?
+- storing amounts as float's
+- build time on CI + cost?
+- SavedStateHandle injections https://insert-koin.io/docs/reference/koin-android/viewmodel/#savedstatehandle-injection-330
 
 
 ## proposed already
 - assigning reviewers instead of "FFA". 
-  - proposed: mixed feeling across developers - Anfan & Anna were happy about it, but rest not necessary.
-- 
+  - proposed: mixed feeling across developers - Anfan & Anna were happy about it, rest mixed feelings.
+
+- project structure guides & rules (architecture, naming convention, tooling) - proposed & agreed
+  - we can check if lint rules are going to help us
+  - we are going to keep it in the repository
+- squash commits when merging to main for simpler commit history - flexibility - do it if you want proposed
+- auto-deleting branches after merging - proposed and done
+- review our stale branches on github - proposed and agreed.
