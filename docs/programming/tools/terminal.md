@@ -1,10 +1,8 @@
 # Terminal comments
 
-Display running  tasks (stacks of activities)
+Display running tasks (stacks of activities)
 `adb shell dumpsys activity activities | sed -En -e '/Stack #/p' -e '/Running activities/,/Run #0/p'`
-
 returns:
-
 ```
   Stack #124: type=standard mode=fullscreen
     Running activities (most recent first):
@@ -15,4 +13,12 @@ returns:
     Running activities (most recent first):
       TaskRecord{e4998d #2 I=com.android.launcher3/com.android.a1launcher.AndroidOneLauncher U=0 StackId=0 sz=1}
         Run #0: ActivityRecord{755e254 u0 com.android.launcher3/com.android.a1launcher.AndroidOneLauncher t2}
+```
+
+<br><br>
+`adb shell dumpsys activity activities | grep 'Hist #' | grep 'YOUR_PACKAGE_NAME'`
+returns:
+```
+* Hist #1: ActivityRecord{b9b3bd3 u0 nimdokai.androidplayground/.MainActivity t73}
+* Hist #0: ActivityRecord{586b9e4 u0 nimdokai.androidplayground/.MainActivity t73}
 ```

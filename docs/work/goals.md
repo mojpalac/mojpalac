@@ -8,3 +8,4 @@
 1. Propose improvement in the work process (e.g. by creating a documentation, ways of working)
 
 
+1. Tech-Stack
