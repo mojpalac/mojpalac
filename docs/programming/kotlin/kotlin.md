@@ -16,5 +16,6 @@ by Delegates.observable(){} // will call specific block of function when the obs
 by Delagates.vetoable() // will call specific block which returns boolean -> true assing new value
 by Delegates.notNull() // will throw IllegalStateException if not initilized"
 ```
-by Lazy allows to also to initialize values, which can allow to omit NPE in case when fe. object is inside sealed class that takes value like: object: Tree: Plant("green")
+`by Lazy` allows also to initialize values, which can allow to omit NPE in case when fe. object is inside sealed class that takes value like: object: Tree: Plant("green")
+
 
