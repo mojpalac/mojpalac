@@ -1,2 +1,0 @@
-Hilt add complexity to UI testing when using Fragments (additionally when using multi-module project), in some cases it
-might be event impossible to implement (vide Lyst) as it would required a refactor of whole architecture of the app.
