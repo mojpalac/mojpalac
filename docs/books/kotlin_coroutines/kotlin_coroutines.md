@@ -1153,7 +1153,8 @@ not needed if we use runTest from kotlinx-coroutines-test. We will discuss this 
 
 From the performance point of view, this dispatcher is the cheapest as it never requires thread switching. So, we might
 choose it if we do not care at all on which thread our code is running. However, in practice, it is not considered good
-to use it so recklessly. What if, by accident, we miss a blocking call, and we are running on the Main thread? This could
+to use it so recklessly. What if, by accident, we miss a blocking call, and we are running on the Main thread? This
+could
 lead to blocking the entire application.
 
 ### Performance of dispatchers against different tasks
@@ -1182,3 +1183,72 @@ a big number of blocking calls;
 • Dispatchers.Default or Dispatchers.IO with parallelism limited to 1, or a custom dispatcher with a single thread,
 which is used when we need to secure shared state modifications;
 • Dispatchers.Unconfined, which we use when we do not care where the coroutine will be executed.
+
+## Constructing a coroutine scope
+
+CoroutineScope is an interface with a single property coroutineContext.
+
+```kotlin
+interface CoroutineScope {
+    val coroutineContext: CoroutineContext
+}
+```
+
+Therefore, we can make a class implement this interface and just directly call coroutine builders in it.
+
+```kotlin
+class SomeClass : CoroutineScope {
+    override val coroutineContext: CoroutineContext = Job()
+    fun onStart() {
+        launch {
+// ...
+        }
+    }
+}
+```
+
+However, this approach is not very popular. On one hand, it is convenient; on the other, it is problematic that in such
+a class we can directly call other CoroutineScope methods like cancel or ensureActive.
+Even accidentally, someone might cancel the whole scope, and coroutines will not start anymore.
+Instead, we generally prefer to hold a coroutine scope as an object in a property and use it to call coroutine builders.
+
+### Constructing a scope on Android
+
+This is how proper implementation can look like:
+
+```kotlin
+abstract class BaseViewModel(
+    private val onError: (Throwable) -> Unit
+) : ViewModel() {
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        onError(throwable)
+    }
+    private val context =
+        Dispatchers.Main + SupervisorJob() + exceptionHandler
+    protected val scope = CoroutineScope(context)
+    override fun onCleared() {
+        context.cancelChildren()
+    }
+}
+```
+
+### viewModelScope and lifecycleScope
+
+In modern your(needs version 2.2.0 or higher) or lifecycleScope (needs androidx.lifecycle:lifecycle-runtime-ktx version
+2.2.0 or higher).
+How they work is nearly identical to what we’ve just constructed: they use Dispatchers.Main and SupervisorJob, and they
+cancel the job when the view model or lifecycle owner gets destroyed.
+
+Using viewModelScope and lifecycleScope is convenient and recommended if we do not need any special context as a part
+of our scope (like CoroutineExceptionHandler).
+This is why this approach is chosen by many (maybe most) Android applications.
+
+### Constructing a scope for additional calls
+
+As explained in the Additional operations section of the Coroutine scope functions chapter, we often make scopes for
+starting additional operations. These scopes are then typically injected via arguments to functions or the constructor.
+If we only plan to use these scopes to suspend calls, it is enough if they just have a SupervisorScope.
+
+```kotlin
+val analyticsScope = CoroutineScope(SupervisorJob())
+```
