@@ -310,7 +310,7 @@ to fold for other collections. It takes:
 
 **Coroutine context and builders**
 So CoroutineContext is just a way to hold and pass data. By default, the parent passes its context to the child, which
-is one of the parent- child relationship effects. We say that the child inherits context from its parent.
+is one of the parent-child relationship effects. We say that the child inherits context from its parent.
 
 Since new elements always replace old ones with the same key, the child context always overrides elements with the same
 key from the parent context. The defaults are used only for keys that are not specified anywhere else. Currently, the
@@ -448,7 +448,7 @@ then in the
 “Cancelled” state.
 
 We might cancel with a different exception (by passing an exception as an argument to the cancel function) to specify
-the cause. This cause needs to be a subtype of CancellationException, because only an exception of this type can be used
+the cause. This cause needs to be a subtype of CancellationException, because only an exception to this type can be used
 to cancel a coroutine.
 After cancel, we often also add join to wait for the cancellation to finish before we can proceed. Without this, we
 would have some race conditions. The snippet below shows an example in which without join we will see “Printing 4” after
@@ -477,5 +477,708 @@ suspend fun main() = coroutineScope {
 
 Adding `job.join()` would change this because it suspends until a coroutine has finished cancellation (I guess currently
 it's in cancelling state, hence it's still able to produce values).
-To make it easier to call cancel and join together, the kotlinx.coroutines library offers a convenient extension
+To make it easier to call cancel and join together, the `kotlinx.coroutines` library offers a convenient extension
 function with a self-descriptive name, `cancelAndJoin`.
+
+Keep in mind that a cancelled coroutine is not just stopped: it is cancelled internally using an exception. Therefore,
+we can freely clean up everything inside the `finally` block. For instance, we can use a `finally` block to close a file
+or
+a database connection. Since most resource-closing mechanisms rely on the `finally` block (for instance, if we read a
+file
+using useLines), we simply do not need to worry about them.
+
+#### Just one more call
+
+Since we can catch `CancellationException` and invoke more operations before the coroutine truly ends, you might be
+wondering where the limit is. The coroutine can run as long as it needs to clean up all the resources. However,
+suspension is no longer allowed. The Job is already in a “Cancelling” state, in which suspension or starting another
+coroutine is not possible at all. If we try to start another coroutine, it will just be ignored. If we try to suspend,
+it will throw CancellationException.
+
+```kotlin
+suspend fun main(): Unit = coroutineScope {
+    val job = Job()
+    launch(job) {
+        try {
+            delay(2000)
+            println("Job is done")
+        } finally {
+            println("Finally")
+            launch { // will be ignored
+                println("Will not be printed")
+            }
+            delay(1000) // here exception is thrown
+            println("Will not be printed")
+        }
+    }
+    delay(1000)
+    job.cancelAndJoin()
+    println("Cancel done")
+}
+// (1 sec)
+// Finally
+// Cancel done
+```
+
+Sometimes, we truly need to use a suspending call when a coroutine is already cancelled. For instance, we might need to
+roll back changes in a database. In this case, the preferred way is to wrap this call with the withContext(
+NonCancellable) function. We will later explain in detail how withContext works. For now, all we need to know is that it
+changes the context of a block of code. Inside withContext, we used the NonCancellable object, which is a Job that
+cannot be cancelled. So, inside the block the job is in the active state, and we can call whatever suspending functions
+we want.
+
+#### Stopping the unstoppable
+
+Because cancellation happens at the suspension points, it will not happen if there is no suspension point. To simulate
+such a situation, we could use `Thread.sleep` instead of delay. This is a terrible practice, so please don’t do this in
+any real-life projects.
+
+```kotlin
+suspend fun main(): Unit = coroutineScope {
+    val job = Job()
+    launch(job) {
+        repeat(1_000) { i ->
+            Thread.sleep(200) // We might have some
+            // complex operations or reading files here
+            // without suspension
+            println("Printing $i")
+        }
+    }
+    delay(1000)
+    job.cancelAndJoin()
+    println("Cancelled successfully")
+    delay(1000)
+}
+// Printing 0
+// Printing 1
+// Printing 2
+// ... (up to 1000)
+```
+
+solution to lack of suspension:
+
+1. using `yield()` - It is a good practice to use yield in suspend functions, between blocks of non-suspended
+   CPU-intensive or time-intensive operations.
+
+```kotlin
+  launch(job) {
+    repeat(1_000) { i ->
+        Thread.sleep(200)
+        yield()
+        println("Printing $i")
+    }
+}
+```
+
+2. check if the current job is active
+
+```kotlin
+launch(job) {
+    do {
+        Thread.sleep(200)
+        println("Printing")
+    } while (isActive)
+}
+```
+
+3. Use ensureActive() which throws CancellationException if Job is not active
+
+```kotlin
+  launch(job) {
+    repeat(1000) { num ->
+        Thread.sleep(200)
+        ensureActive()
+        println("Printing $num")
+    }
+}
+```
+
+The result of ensureActive() and yield() seem similar, but they are very different. The function ensureActive() needs to
+be called on a CoroutineScope (or CoroutineContext, or Job). All it does is throw an exception if the job is no longer
+active. It is lighter, so generally it should be preferred. The function yield is a regular top-level suspension
+function. It does not need any scope, so it can be used in regular suspending functions. Since it does suspension and
+resuming, other effects might arise, such as thread changing if we use a dispatcher with a pool of threads (more about
+this in the Dispatchers chapter). yield is more often used just in suspending functions that are CPU intensive or are
+blocking threads.
+
+#### suspendCancellableCoroutine
+
+Most often we use it to cancel processes in a library or to free some resources.
+
+Here, you might remind yourself of the suspendCancellableCoroutine function introduced in the How does suspension work?
+chapter. It behaves like suspendCoroutine, but its continuation is wrapped into CancellableContinuation<T>, which
+provides some additional methods. The most important one is invokeOnCancellation, which we use to define what should
+happen when a coroutine is cancelled.
+
+```kotlin
+suspend fun someTask() = suspendCancellableCoroutine { cont ->
+    cont.invokeOnCancellation {
+// do cleanup
+    }
+// rest of the implementation
+}
+```
+
+#### Exception handling
+
+A very important part of how coroutines behave is their exception handling. Just as a program breaks when an uncaught
+exception slips by, a coroutine breaks in the case of an uncaught exception. This behavior is nothing new: for instance,
+threads also end in such cases. The difference is that coroutine builders also cancel their parents, and each cancelled
+parent cancels all its children.
+
+Let’s look at the example below. Once a coroutine receives an exception, it cancels itself and propagates the exception
+to its parent (`launch`). The parent cancels itself and all its children, then it propagates the exception to its
+parent (
+`runBlocking`). `runBlocking` is a root coroutine (it has no parent), so it just ends the program (`runBlocking`
+rethrows the
+exception).
+
+```kotlin
+fun main(): Unit = runBlocking {
+    launch {
+        launch {
+            delay(1000)
+            throw Error("Some error")
+        }
+        launch {
+            delay(2000)
+            println("Will not be printed")
+        }
+        launch {
+            delay(500) // faster than the exception
+            println("Will be printed")
+        }
+    }
+    launch {
+        delay(2000)
+        println("Will not be printed")
+    }
+}
+// Will be printed
+// Exception in thread "main" java.lang.Error: Some error...
+```
+
+Exception propagation is **bidirectional**: the exception is propagated from child to parent, and when those parents are
+cancelled, they cancel their children. Thus, if exception propagation is not stopped, **all coroutines in the hierarchy
+will be cancelled.**
+
+#### Stop breaking my coroutines
+
+Catching an exception before it breaks a coroutine is helpful, but any later is too late. Communication happens via a
+job, so wrapping a coroutine builder with a try-catch is not helpful at all.
+
+```kotlin
+fun main(): Unit = runBlocking {
+// Don't wrap in a try-catch here. It will be ignored. 
+    try {
+        launch {
+            delay(1000)
+            throw Error("Some error")
+        }
+    } catch (e: Throwable) { // nope, does not help here 
+        println("Will not be printed")
+    }
+    launch {
+        delay(2000)
+        println("Will not be printed")
+    }
+}
+// Exception in thread "main" java.lang.Error: Some error...
+```
+
+#### SupervisorJob
+
+The most important way to stop coroutines breaking is by using a SupervisorJob. This is a special kind of job that
+ignores all exceptions in its children.
+SupervisorJob is generally used as part of a scope in which we start multiple coroutines (more about this in the
+Constructing coroutine scope chapter).
+
+```kotlin
+fun main(): Unit = runBlocking {
+    val scope = CoroutineScope(SupervisorJob())
+    scope.launch {
+        delay(1000)
+        throw Error("Some error")
+    }
+    scope.launch {
+        delay(2000)
+        println("Will be printed")
+    }
+    delay(3000)
+}
+// Exception...
+// Will be printed
+```
+
+A common mistake is to use a SupervisorJob as an argument to a parent coroutine, like in the code below. It won’t help
+us handle exceptions, because in such a case SupervisorJob has only one direct child, namely the launch defined at 1
+that received this SupervisorJob as an argument. So, in such a case there is no advantage of using SupervisorJob over
+Job (in both cases, the exception will not prop-agate to runBlocking because we are not using its job).
+
+```kotlin
+fun main(): Unit = runBlocking {
+    // Don't do that, SupervisorJob with one child 
+    // and no parent works similar to just Job 
+    launch(SupervisorJob()) { // 1
+        launch {
+            delay(1000)
+            throw Error("Some error")
+        }
+        launch {
+            delay(2000)
+            println("Will not be printed")
+        }
+    }
+    delay(3000)
+}
+// Exception...
+```
+
+It would make more sense if we used the same job as a context for multiple coroutine builders because each of them can
+be cancelled, but they won’t cancel each other.
+
+```kotlin
+fun main(): Unit = runBlocking {
+    val job = SupervisorJob()
+    launch(job) {
+        delay(1000)
+        throw Error("Some error")
+    }
+    launch(job) {
+        delay(2000)
+        println("Will be printed")
+    }
+    job.join()
+}
+// (1 sec)
+// Exception...
+// (1 sec)
+// Will be printed
+```
+
+#### supervisorScope
+
+Another way to stop exception propagation is to wrap coroutine builders with supervisorScope. This is very convenient as
+we still keep a connection to the parent, yet any exceptions from the coroutine will be silenced.
+
+```kotlin
+
+fun main(): Unit = runBlocking {
+    supervisorScope {
+        launch {
+            delay(1000)
+            throw Error("Some error")
+        }
+        launch {
+            delay(2000)
+            println("Will be printed")
+        }
+    }
+    delay(1000)
+    println("Done")
+}
+// Exception...
+// Will be printed
+// (1 sec)
+// Done
+```
+
+The common way to use it is to start multiple independent tasks .
+
+```kotlin
+suspend fun notifyAnalytics(actions: List<UserAction>) = supervisorScope {
+    actions.forEach { action ->
+        launch {
+            notifyAnalytics(action)
+        }
+    }
+}
+```
+
+Beware, that supervisorScope cannot be replaced with withContext(SupervisorJob())! Take a look at the below snippet.
+
+```kotlin
+// DON'T DO THAT!
+suspend fun sendNotifications(
+    notifications: List<Notification>
+) = withContext(SupervisorJob()) {
+        for (notification in notifications) {
+            launch {
+                client.send(notification)
+            }
+        }
+    }
+```
+
+The problem here is that Job is the only context that is not inherited. Each coroutine needs its own job, and passing a
+job to a coroutine makes it a parent. So here SupervisorJob is a parent of withContext coroutine. When a child has an
+exception, it propagates to _coroutine_ coroutine, cancels its Job, cancels children, and throws an exception. The fact
+that SupervisorJob is a parent changes nothing.
+
+#### CancellationException does not propagate to its parent
+
+If an exception is a subclass of CancellationException, it will not be propagated to its parent. It will only cause
+cancellation of the current coroutine. CancellationException is an open class, so it can be extended by our own classes
+or objects.
+
+```kotlin
+object MyNonPropagatingException : CancellationException()
+
+suspend fun main(): Unit = coroutineScope {
+    launch { // 1
+        launch { // 2
+            delay(2000)
+            println("Will not be printed")
+        }
+        throw MyNonPropagatingException // 3 
+    }
+    launch { // 4
+        delay(2000)
+        println("Will be printed")
+    }
+}
+// (2 sec)
+// Will be printed
+```
+
+In the above snippet, we start two coroutines with builders at 1 and 4. At 3, we throw a MyNonPropagatingException
+exception, which is a subtype of CancellationException. This exception is caught by launch (started at 1). This builder
+cancels itself, then it also cancels its children, namely the builder defined at 2. The launch started at 4 is not
+affected, so it prints “Will be printed” after 2 seconds.
+
+#### Coroutine exception handler
+
+When dealing with exceptions, sometimes it is useful to define default behavior for all of them. This is where the
+CoroutineExceptionHandler context comes in handy. It does not stop the exception propagating, but it can be used to
+define what should happen in the case of an exception (by default, it prints the exception stack trace).
+
+```kotlin
+fun main(): Unit = runBlocking {
+    val handler =
+        CoroutineExceptionHandler { ctx, exception ->
+            println("Caught $exception")
+        }
+    val scope = CoroutineScope(SupervisorJob() + handler)
+    scope.launch {
+        delay(1000)
+        throw Error("Some error")
+    }
+    scope.launch {
+        delay(2000)
+        println("Will be printed")
+    }
+    delay(3000)
+}
+// Caught java.lang.Error: Some error
+// Will be printed
+```
+
+This context is useful on many platforms to add a default way of dealing with exceptions. For Android, it often informs
+the user about a problem by showing a dialog or an error message.
+
+### Coroutine scope functions
+
+GlobalScope is just a scope with EmptyCoroutineContext.
+
+```kotlin
+object GlobalScope : CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = EmptyCoroutineContext
+}
+```
+
+If we call async on a GlobalScope, we will have no relationship to the
+parent coroutine. This means that the async coroutine:
+
+- cannot be can celled(if the parent is cancelled,functions inside async still run, thus wasting resources until they
+  are done);
+- does not inherit a scope from any parent (it will always run on the default dispatcher and will not respect any
+  context from the parent).
+
+The most important consequences are:
+• potential memory leaks and redundant CPU usage;
+• the tools for unit testing coroutines will not work here, so testing this function is very hard.
+
+#### coroutineScope
+
+Unlike async or launch, the body of coroutineScope is called in-place. It formally creates a new coroutine, but it
+suspends the previous one until the new one is finished, so it does not start any concurrent process. Take a look at the
+below example, in which both delay calls suspend runBlocking.
+
+```kotlin
+fun main() = runBlocking {
+    val a = coroutineScope {
+        delay(1000)
+        10
+    }
+    println("a is calculated")
+    val b = coroutineScope {
+        delay(1000)
+        20
+    }
+    println(a) // 10
+    println(b) // 20
+}
+// (1 sec)
+// a is calculated
+// (1 sec)
+// 10
+// 20
+```
+
+The provided scope inherits its coroutineContext from the outer scope, but it overrides the context’s Job. Thus, the
+produced scope respects its parental responsibilities:
+• inherits a context from its parent;
+• waits for all its children before it can finish itself;
+• cancels all its children when the parent is cancelled.
+In the example below, you can observe that “After” will be printed at the end because coroutineScope will not finish
+until all its children are finished. Also, CoroutineName is properly passed from parent to child.
+
+| **Coroutine builders<br>(except for runBlocking)**   	 | **Coroutine scope functions**                                                	 |
+|--------------------------------------------------------|--------------------------------------------------------------------------------|
+| launch, async, produce                               	 | coroutineScope, supervisorScope, withContext, withTimeout                    	 |
+| Are extension functions on CoroutineScope.           	 | Are suspending functions.                                                    	 |
+| Take coroutine context from CoroutineScope receiver. 	 | Take coroutine context from suspending function<br>continuation.             	 |
+| Exceptions are propagated to the parent through Job. 	 | Exceptions are thrown in the same way as they are from/by regular functions. 	 |
+| Starts an asynchronous coroutine.                    	 | Starts a coroutine that is called in-place.                                  	 |
+
+#### withContext
+
+The withContext function is similar to coroutineScope, but it additionally allows some changes to be made to the scope.
+The context provided as an argument to this function overrides the context from the parent scope (the same way as in
+coroutine builders). This means that withContext(EmptyCoroutineContext) and coroutineScope() behave in exactly the same
+way
+
+it’s better to use coroutineScope and withContext, and avoid async with immediate await.
+
+### supervisorScope
+
+The supervisorScope function also behaves a lot like coroutineScope: it creates a CoroutineScope that inherits from the
+outer scope and calls the specified suspend block in it. The difference is that it overrides the context’s Job with
+SupervisorJob, so it is not cancelled when a child raises an exception.
+
+supervisorScope is mainly used in functions that start multiple independent tasks.
+
+### withTimeout
+
+Another function that behaves a lot like coroutineScope is withTimeout. It also creates a scope and returns a value.
+Actually, withTimeout with a very big timeout behaves just like coroutineScope. The difference is that withTimeout
+additionally sets a time limit for its body execution. If it takes too long, it cancels this body and throws
+TimeoutCancellationException (a subtype of CancellationException).
+
+The function withTimeout is especially useful for testing. It can be used to test if some function takes more or less
+than some time. If it is used inside runTest, it will operate in virtual time. We also use it inside runBlocking to just
+limit the execution time of some function (this is then like setting timeout on @Test).
+
+```kotlin
+class Test {
+
+    @Test
+    fun testTime2() = runTest {
+        withTimeout(1000) {
+            // something that should take less than 1000
+            delay(900) // virtual time
+        }
+    }
+
+    @Test(expected = TimeoutCancellationException::class)
+    fun testTime1() = runTest {
+        withTimeout(1000) {
+            // something that should take more than 1000
+            delay(1100) // virtual time
+        }
+    }
+
+    @Test
+    fun testTime3() = runBlocking {
+        withTimeout(1000) {
+        }
+    }
+}
+```
+
+Beware that withTimeout throws TimeoutCancellationException, which is a subtype of CancellationException (the same
+exception that is thrown when a coroutine is cancelled). So, when this exception is thrown in a coroutine builder, it
+only cancels it and does not affect its parent (as explained in the previous chapter).
+
+### Additional operations
+
+Imagine a case in which in the middle of some processing you need to execute an additional operation. For example, after
+showing a user profile you want to send a request for analytics purposes. People often do this with just a regular
+launch in the same scope:
+
+However, there are some problems with this approach. Firstly, this launch does nothing here because coroutineScope needs
+to await its completion anyway. So if you are showing a progress bar when updating the view, the user needs to wait
+until this notifyProfileShown is finished as well. This does not make much sense.
+
+The second problem is cancellation. Coroutines are designed (by default) to cancel other operations when there is an
+exception. This is great for essential operations. If getProfile has an exception, we should cancel getName and
+getFriends because their response would be useless anyway. However, canceling a process just because an analytics call
+has failed does not make much sense.
+So what should we do? When you have an additional (non-essential) operation that should not influence the main process,
+it is better to start it on a separate scope. Creating your own scope is easy. In this example, we create an
+analyticsScope.
+
+```kotlin
+val analyticsScope = CoroutineScope(SupervisorJob())
+```
+
+For unit testing and controlling this scope, it is better to inject it via a constructor.
+
+## Dispatchers
+
+In the English dictionary, a dispatcher is defined as “a person who is responsible for sending people or vehicles to
+where they are needed, especially emergency vehicles”. In Kotlin coroutines, CoroutineContext determines on which thread
+a certain coroutine will run.
+
+### Default dispatcher
+
+If you don’t set any dispatcher, the one chosen by default is Dispatchers.Default, which is designed to run
+CPU-intensive operations. **It has a pool of threads with a size equal to the number of cores in the machine your code
+is
+running on (but not less than two)**. At least theoretically, this is the optimal number of threads, assuming you are
+using these threads efficiently, i.e., performing CPU-intensive calculations and not blocking them.
+
+### IO dispatcher
+
+or instance, if you need to perform long I/O operations (e.g., read big files) or if you need to use a library with
+blocking functions. You cannot block the Main thread, because your application would freeze. If you block your default
+dispatcher, you risk blocking all the threads in the thread pool, in which case you wouldn't be able to do any
+calculations. This is why we need a dispatcher for such a situation, and it is Dispatchers.IO.
+
+Dispatchers.IO is designed to be used when we block threads with I/O operations, for instance, when we read/write files,
+use Android shared preferences, or call blocking functions. The code below takes around 1 second because Dispatchers.IO
+allows more than 50 active threads at the same time.
+
+```kotlin
+
+suspend fun main() {
+    val time = measureTimeMillis {
+        coroutineScope {
+            repeat(50) {
+                launch(Dispatchers.IO) {
+                    Thread.sleep(1000)
+                }
+            }
+            println(time) // ~1000
+        }
+    }
+}
+```
+
+How does it work? Imagine an unlimited pool of threads. Initially, it is empty, but as we need more threads, they are
+created and kept
+active until they are not used for some time. Such a pool exists, but it wouldn't be safe to use it directly. With too
+many active threads, the performance degrades in a slow but unlimited manner, eventually causing out-of-memory errors.
+This is why we create dispatchers that have a limited number of threads they can use at the same time.
+Dispatchers.Default is limited by the number of cores in your processor. The limit of Dispatchers.IO is 64 (or the
+number of cores if there are more).
+
+As we mentioned, both Dispatchers.Default and Dispatchers.IO share the same pool of threads. This is an important
+optimization. Threads are reused, and often redispatching is not needed. For instance, let’s say you are running on
+Dispatchers.Default and then execution reaches withContext(Dispatchers.IO) { ... }. Most often, you will stay on the
+same thread33, but what changes is that this thread counts not towards the Dispatchers.Default limit but towards the
+Dispatchers.IO limit. Their limits are independent, so they will never starve each other.
+
+#### IO dispatcher with a custom pool of threads
+
+Dispatchers.IO has a special behavior defined for the limitedParallelism function. It creates a new dispatcher with an
+independent pool of threads. What is more, this pool is not limited to 64 as we can decide to limit it to as many
+threads as we want.
+For example, imagine you start 100 coroutines, each of which blocks a thread for a second. If you run these coroutines
+on Dispatchers.IO, it will take 2 seconds. If you run them on Dispatchers.IO with limitedParallelism set to 100 threads,
+it will take 1 second. Execution time for both dispatchers can be measured at the same time because the limits of
+these two dispatchers are independent anyway.
+
+### Sharing a state
+
+For all dispatchers using multiple threads, we need to consider the shared state problem. Notice that in the example
+below 10,000 coroutines are increasing i by 1. So, its value should be 10,000, but it is a smaller number. This is a
+result of a shared state (i property) modification on multiple threads at the same time.
+
+```kotlin
+var i = 0
+suspend fun main(): Unit = coroutineScope {
+    repeat(10_000) {
+        launch(Dispatchers.IO) { // or Default
+            i++
+        }
+    }
+    delay(1000)
+    println(i) // ~9930
+}
+```
+
+There are many ways to solve this problem, but one option is to use a dispatcher with just a single thread. If we use
+just a single thread at a time, we do not
+need any other synchronization.
+
+```kotlin
+var i = 0
+suspend fun main(): Unit = coroutineScope {
+    val dispatcher = Dispatchers.Default
+        .limitedParallelism(1)
+    repeat(10000) {
+        launch(dispatcher) {
+            i++
+        }
+    }
+    delay(1000)
+    println(i) // 10000
+}
+```
+
+The biggest disadvantage is that because we have only one thread, our calls will be handled sequentially if we block it.
+
+### Using virtual threads from Project Loom
+
+JVM platform introduced a new technology known as Project Loom. Its biggest innovation is the introduction of virtual
+threads, which are much lighter than regular threads. It costs much less to have blocked virtual threads than to have a
+regular thread blocked.
+
+At the moment, Project Loom is still young, and it is hard actually to use it, but I must say it is an exciting
+substitution for Dispatchers.IO. However, you will likely not need it in the future, as the Kotlin Coroutines team
+expresses their willingness to use virtual threads by default once Project Loom gets stable. I hope it will happen soon.
+
+### Unconfined dispatcher
+
+The last dispatcher we need to discuss is Dispatchers.Unconfined. This dispatcher is different from the previous one as
+it does not change any threads. When it is started, it runs on the thread on which it was started. If it is resumed, it
+runs on the thread that resumed it.
+
+This is sometimes useful for unit testing. Imagine that you need to test a function that calls launch. Synchronizing the
+time might not be easy. One solution is to use Dispatchers.Unconfined instead of all other dispatchers. If it is used in
+all scopes, everything runs on the same thread, and we can more easily control the order of operations. This trick is
+not needed if we use runTest from kotlinx-coroutines-test. We will discuss this later in the book.
+
+From the performance point of view, this dispatcher is the cheapest as it never requires thread switching. So, we might
+choose it if we do not care at all on which thread our code is running. However, in practice, it is not considered good
+to use it so recklessly. What if, by accident, we miss a blocking call, and we are running on the Main thread? This could
+lead to blocking the entire application.
+
+### Performance of dispatchers against different tasks
+
+![dispatchers_performance.png](dispatchers_performance.png)
+
+There are a few important observations you can make:
+
+1. When we are just suspending, it doesn’t really matter how many threads we are using.
+2. When we are blocking, the more threads we are using, the faster all these coroutines will be finished.
+3. With CPU-intensive operations, Dispatchers.Default is the best option.
+4. If we are dealing with a memory-intensive problem, more threads might provide some (but not a significant)
+   improvement.
+
+### Summary of dispatchers
+
+Dispatchers determine on which thread or thread pool a coroutine will be running (starting and resuming). The most
+important options are:
+• Dispatchers.Default, which we use for CPU-intensive operations;
+• Dispatchers.Main, which we use to access the Main thread on Android, Swing, or JavaFX;
+• Dispatchers.Main.immediate, which runs on the same thread as Dispatchers.Main but is not re-dispatched if it is not
+necessary;
+• Dispatchers.IO, which we use when we need to do some blocking operations;
+• Dispatchers.IO with limited parallelism or a custom dispatcher with a pool of threads, which we use when we might have
+a big number of blocking calls;
+• Dispatchers.Default or Dispatchers.IO with parallelism limited to 1, or a custom dispatcher with a single thread,
+which is used when we need to secure shared state modifications;
+• Dispatchers.Unconfined, which we use when we do not care where the coroutine will be executed.
