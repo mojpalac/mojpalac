@@ -14,6 +14,8 @@
 ### To Propose on next Sharing Session
 
 ## ideas
+- fixing the failing tests/jobs. Maybe review how are we doing it(as a part of github actions to improve performance)?
+- https://justeattakeaway.atlassian.net/wiki/spaces/techcomms/blog/2023/03/29/6309511581/Support+For+Gradle+Projects+In+RunSonarQubeScan+Github+Action
 - linking JIRA ticket in github
 - Explicit API mode
 - moving away from DataBinding and using ViewBinding
