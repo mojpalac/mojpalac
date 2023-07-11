@@ -3,6 +3,7 @@
 Display running tasks (stacks of activities)
 `adb shell dumpsys activity activities | sed -En -e '/Stack #/p' -e '/Running activities/,/Run #0/p'`
 returns:
+
 ```
   Stack #124: type=standard mode=fullscreen
     Running activities (most recent first):
@@ -18,7 +19,11 @@ returns:
 <br><br>
 `adb shell dumpsys activity activities | grep 'Hist #' | grep 'YOUR_PACKAGE_NAME'`
 returns:
+
 ```
 * Hist #1: ActivityRecord{b9b3bd3 u0 nimdokai.androidplayground/.MainActivity t73}
 * Hist #0: ActivityRecord{586b9e4 u0 nimdokai.androidplayground/.MainActivity t73}
 ```
+
+Clear data storage && remove file (used in orderpad to change the partner/ login to different restaurant)
+`adb -s emulator-5554 shell "pm clear com.justeat.orderpad & rm -f /sdcard/preferencesV3.json"`
