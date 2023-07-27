@@ -46,8 +46,7 @@ functions that can suspend a coroutine.
 
 - suspend fun in reality are fun with additionally parameter at the end: continuation
 - Suspending functions are like state machines, with a possible state at the beginning of the function and after each
-  suspending
-  function call.
+  suspending function call.
 - Both the number identifying the state and the local data are kept in the continuation object.
 - Continuation of a function decorates a continuation of its caller function; as a result, all these continuations
   represent a call stack that is used when we resume or a resumed function completes.
@@ -261,10 +260,10 @@ fun main() = runBlocking {
 A parent provides a scope for its children, and they are called in this scope.
 This builds a relationship that is called a structured concurrency.
 Here are the most important effects of the parent-child relationship:
-• children inherit context from their parent (but they can also overwrite)
-• a parent suspends until all the children are finished
-• when the parent is cancelled,its child coroutines are cancelled too
-• when a child raises an error,it destroys the parent as well
+- children inherit context from their parent (but they can also overwrite)
+- a parent suspends until all the children are finished
+- when the parent is cancelled,its child coroutines are cancelled too
+- when a child raises an error,it destroys the parent as well
 
 Notice that, unlike other coroutine builders, runBlocking is not an extension function on CoroutineScope. This means
 that it cannot be a child: it can only be used as a root coroutine (the parent of all the children in a hierarchy).
@@ -278,17 +277,20 @@ each Element is also a CoroutineContext. Every element in it has a unique Key th
 CoroutineContext is just a universal way to group and pass objects to coroutines. These objects are kept by the
 coroutines and can determine how these coroutines should be running (what their state is, in which thread, etc).
 
-Adding contexts - What makes CoroutineContext truly useful is the ability to merge two of them together.
+**Adding contexts** - What makes CoroutineContext truly useful is the ability to merge two of them together.
 When two elements with different keys are added, the resulting context responds to both keys.
 
 ```kotlin
-
 fun main() {
-    val ctx1: CoroutineContext =
-        CoroutineName("Name1") println (ctx1[CoroutineName]?.name) // Name1 println(ctx1[Job]?.isActive) // null
-    val ctx2: CoroutineContext =
-        Job() println (ctx2[CoroutineName]?.name) // null println(ctx2[Job]?.isActive) // true, because "Active" // is the default state of a job created this way
-    val ctx3 = ctx1 + ctx2 println (ctx3[CoroutineName]?.name) // Name1 println(ctx3[Job]?.isActive) // true
+    val ctx1: CoroutineContext = CoroutineName("Name1") 
+    println(ctx1[CoroutineName]?.name) // Name1 
+    println(ctx1[Job]?.isActive) // null
+    val ctx2: CoroutineContext = Job()
+    println(ctx2[CoroutineName]?.name) // null 
+    println(ctx2[Job]?.isActive) // true, because "Active" // is the default state of a job created this way
+    val ctx3 = ctx1 + ctx2 
+    println (ctx3[CoroutineName]?.name) // Name1 
+    println(ctx3[Job]?.isActive) // true
 }
 ```
 
@@ -296,27 +298,29 @@ When another element with the same key is added, just like in a map, the new ele
 
 ```kotlin
 fun main() {
-    val ctx1: CoroutineContext = CoroutineName("Name1") println (ctx1[CoroutineName]?.name) // Name1
-    val ctx2: CoroutineContext = CoroutineName("Name2") println (ctx2[CoroutineName]?.name) // Name2
+    val ctx1: CoroutineContext = CoroutineName("Name1") 
+    println(ctx1[CoroutineName]?.name) // Name1
+    val ctx2: CoroutineContext = CoroutineName("Name2") 
+    println(ctx2[CoroutineName]?.name) // Name2
     val ctx3 = ctx1 + ctx2
     println(ctx3[CoroutineName]?.name) // Name2
 }
 ```
 
-Subtracting elements - Elements can also be removed from a context by their key using the minusKey function.
+**Subtracting elements** - Elements can also be removed from a context by their key using the minusKey function.
 
-Folding context - If we need to do something for each element in a context, we can use the fold method, which is similar
-to fold for other collections. It takes:
+**Folding context** - If we need to do something for each element in a context, we can use the fold method, which is similar
+to fold for other collections.
 
-**Coroutine context and builders**
+### Coroutine context and builders
 So CoroutineContext is just a way to hold and pass data. By default, the parent passes its context to the child, which
 is one of the parent-child relationship effects. We say that the child inherits context from its parent.
 
 Since new elements always replace old ones with the same key, the child context always overrides elements with the same
 key from the parent context. The defaults are used only for keys that are not specified anywhere else. Currently, the
-defaults only set Dispatchers.Default when no ContinuationInterceptor is set, and they only set CoroutineId when the
+defaults only set `Dispatchers.Default` when no `ContinuationInterceptor` is set, and they only set `CoroutineId` when the
 application is in debug mode.
-There is a special context called Job, which is mutable and is used to communicate between a coroutine’s child and its
+There is a special context called `Job`, which is mutable and is used to communicate between a coroutine’s child and its
 parent.
 
 **Accessing context in a suspending function**
@@ -378,8 +382,10 @@ jobs, so it can be used elsewhere. This is clearly visible for launch, where Job
 
 There is a very important rule: Job is the only coroutine context that is not inherited by a coroutine from a coroutine.
 Every coroutine creates its own Job, and the job from an argument or parent coroutine is used as a parent of this new
-job.There is a very important rule: Job is the only coroutine context that is not inherited by a coroutine from a
-coroutine. Every coroutine creates its own Job, and the job from an argument or parent coroutine is used as a parent
+job.There is a very important rule:<br>
+**Job is the only coroutine context that is not inherited by a coroutine from a
+coroutine**.<br>
+Every coroutine creates its own Job, and the job from an argument or parent coroutine is used as a parent
 of this new job.
 The parent can reference all its children, and the children can refer to the parent. This parent-child relationship (Job
 reference storing) enables the implementation of cancellation and exception handling inside a coroutine’s scope.
@@ -397,7 +403,7 @@ fun main(): Unit = runBlocking {
 // (prints nothing, finishes immediately)
 ```
 
-n the above example, the parent does not wait for its children because it has no relation with them. This is because the
+In the above example, the parent does not wait for its children because it has no relation with them. This is because the
 child uses the job from the argument as a parent, so it has no relation to the runBlocking.
 When a coroutine has its own (independent) job, it has nearly no relation to its parent. It only inherits other
 contexts, but other results of the parent-child relationship will not apply. This causes us to lose structured
@@ -890,14 +896,14 @@ object GlobalScope : CoroutineScope {
 If we call async on a GlobalScope, we will have no relationship to the
 parent coroutine. This means that the async coroutine:
 
-- cannot be can celled(if the parent is cancelled,functions inside async still run, thus wasting resources until they
+- cannot be cancelled(if the parent is cancelled,functions inside async still run, thus wasting resources until they
   are done);
 - does not inherit a scope from any parent (it will always run on the default dispatcher and will not respect any
   context from the parent).
 
 The most important consequences are:
-• potential memory leaks and redundant CPU usage;
-• the tools for unit testing coroutines will not work here, so testing this function is very hard.
+- potential memory leaks and redundant CPU usage;
+- the tools for unit testing coroutines will not work here, so testing this function is very hard.
 
 #### coroutineScope
 
@@ -928,9 +934,9 @@ fun main() = runBlocking {
 
 The provided scope inherits its coroutineContext from the outer scope, but it overrides the context’s Job. Thus, the
 produced scope respects its parental responsibilities:
-• inherits a context from its parent;
-• waits for all its children before it can finish itself;
-• cancels all its children when the parent is cancelled.
+- inherits a context from its parent;
+- waits for all its children before it can finish itself;
+- cancels all its children when the parent is cancelled.
 In the example below, you can observe that “After” will be printed at the end because coroutineScope will not finish
 until all its children are finished. Also, CoroutineName is properly passed from parent to child.
 
@@ -1223,8 +1229,7 @@ abstract class BaseViewModel(
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         onError(throwable)
     }
-    private val context =
-        Dispatchers.Main + SupervisorJob() + exceptionHandler
+    private val context = Dispatchers.Main + SupervisorJob() + exceptionHandler
     protected val scope = CoroutineScope(context)
     override fun onCleared() {
         context.cancelChildren()
@@ -1252,3 +1257,5 @@ If we only plan to use these scopes to suspend calls, it is enough if they just 
 ```kotlin
 val analyticsScope = CoroutineScope(SupervisorJob())
 ```
+
+## The problem with shared state
