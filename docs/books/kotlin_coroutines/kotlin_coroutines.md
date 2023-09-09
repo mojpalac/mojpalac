@@ -260,6 +260,7 @@ fun main() = runBlocking {
 A parent provides a scope for its children, and they are called in this scope.
 This builds a relationship that is called a structured concurrency.
 Here are the most important effects of the parent-child relationship:
+
 - children inherit context from their parent (but they can also overwrite)
 - a parent suspends until all the children are finished
 - when the parent is cancelled,its child coroutines are cancelled too
@@ -282,14 +283,14 @@ When two elements with different keys are added, the resulting context responds 
 
 ```kotlin
 fun main() {
-    val ctx1: CoroutineContext = CoroutineName("Name1") 
+    val ctx1: CoroutineContext = CoroutineName("Name1")
     println(ctx1[CoroutineName]?.name) // Name1 
     println(ctx1[Job]?.isActive) // null
     val ctx2: CoroutineContext = Job()
     println(ctx2[CoroutineName]?.name) // null 
     println(ctx2[Job]?.isActive) // true, because "Active" // is the default state of a job created this way
-    val ctx3 = ctx1 + ctx2 
-    println (ctx3[CoroutineName]?.name) // Name1 
+    val ctx3 = ctx1 + ctx2
+    println(ctx3[CoroutineName]?.name) // Name1 
     println(ctx3[Job]?.isActive) // true
 }
 ```
@@ -298,9 +299,9 @@ When another element with the same key is added, just like in a map, the new ele
 
 ```kotlin
 fun main() {
-    val ctx1: CoroutineContext = CoroutineName("Name1") 
+    val ctx1: CoroutineContext = CoroutineName("Name1")
     println(ctx1[CoroutineName]?.name) // Name1
-    val ctx2: CoroutineContext = CoroutineName("Name2") 
+    val ctx2: CoroutineContext = CoroutineName("Name2")
     println(ctx2[CoroutineName]?.name) // Name2
     val ctx3 = ctx1 + ctx2
     println(ctx3[CoroutineName]?.name) // Name2
@@ -309,16 +310,19 @@ fun main() {
 
 **Subtracting elements** - Elements can also be removed from a context by their key using the minusKey function.
 
-**Folding context** - If we need to do something for each element in a context, we can use the fold method, which is similar
+**Folding context** - If we need to do something for each element in a context, we can use the fold method, which is
+similar
 to fold for other collections.
 
 ### Coroutine context and builders
+
 So CoroutineContext is just a way to hold and pass data. By default, the parent passes its context to the child, which
 is one of the parent-child relationship effects. We say that the child inherits context from its parent.
 
 Since new elements always replace old ones with the same key, the child context always overrides elements with the same
 key from the parent context. The defaults are used only for keys that are not specified anywhere else. Currently, the
-defaults only set `Dispatchers.Default` when no `ContinuationInterceptor` is set, and they only set `CoroutineId` when the
+defaults only set `Dispatchers.Default` when no `ContinuationInterceptor` is set, and they only set `CoroutineId` when
+the
 application is in debug mode.
 There is a special context called `Job`, which is mutable and is used to communicate between a coroutine’s child and its
 parent.
@@ -403,7 +407,8 @@ fun main(): Unit = runBlocking {
 // (prints nothing, finishes immediately)
 ```
 
-In the above example, the parent does not wait for its children because it has no relation with them. This is because the
+In the above example, the parent does not wait for its children because it has no relation with them. This is because
+the
 child uses the job from the argument as a parent, so it has no relation to the runBlocking.
 When a coroutine has its own (independent) job, it has nearly no relation to its parent. It only inherits other
 contexts, but other results of the parent-child relationship will not apply. This causes us to lose structured
@@ -902,6 +907,7 @@ parent coroutine. This means that the async coroutine:
   context from the parent).
 
 The most important consequences are:
+
 - potential memory leaks and redundant CPU usage;
 - the tools for unit testing coroutines will not work here, so testing this function is very hard.
 
@@ -934,11 +940,12 @@ fun main() = runBlocking {
 
 The provided scope inherits its coroutineContext from the outer scope, but it overrides the context’s Job. Thus, the
 produced scope respects its parental responsibilities:
+
 - inherits a context from its parent;
 - waits for all its children before it can finish itself;
 - cancels all its children when the parent is cancelled.
-In the example below, you can observe that “After” will be printed at the end because coroutineScope will not finish
-until all its children are finished. Also, CoroutineName is properly passed from parent to child.
+  In the example below, you can observe that “After” will be printed at the end because coroutineScope will not finish
+  until all its children are finished. Also, CoroutineName is properly passed from parent to child.
 
 | **Coroutine builders<br>(except for runBlocking)**   	 | **Coroutine scope functions**                                                	 |
 |--------------------------------------------------------|--------------------------------------------------------------------------------|
@@ -1259,3 +1266,277 @@ val analyticsScope = CoroutineScope(SupervisorJob())
 ```
 
 ## The problem with shared state
+
+given:
+
+```kotlin
+class UserDownloader(
+    private val api: NetworkService
+) {
+
+    private val users = mutableListOf<User>()
+
+    fun downloaded(): List<User> = users.toList()
+
+    suspend fun fetchUser(id: Int) {
+        val newUser = api.fetchUser(id)
+        users.add(newUser)
+    }
+}
+```
+
+Since it can be started on more than one thread at the same time, we say users is a **shared state**,
+therefore it needs to be secured.
+This is because concurrent modifications can lead to conflicts.
+Users will be added at the same time by different threads which will cause that some of them won't be saved.
+More on this in [Multithreading](../../programming/android/threading.md#Multithreading)
+
+To solve above we can try below solutions:
+
+### Blocking synchronization
+
+Issues:
+
+- inside `synchronized` block you cannot use suspending functions.
+- this is blocking threads when a coroutine is waiting for its turn
+
+### AtomicValue
+
+```kotlin
+
+private var counter = AtomicInteger()
+fun main() = runBlocking {
+    massiveRun {
+        counter.incrementAndGet()
+    }
+    println(counter.get()) // 1000000
+}
+```
+
+It works perfectly here, but the utility of atomic values is generally very limited, therefore we need to be careful:
+just knowing a single operation will be atomic does not help us when we have a bundle of operations.
+
+```kotlin
+private var counter = AtomicInteger()
+fun main() = runBlocking {
+    massiveRun {
+        counter.set(counter.get() + 1)
+    }
+    println(counter.get()) // ~430467
+}
+```
+
+To secure our `UserDownloader`, we could use the AtomicReference wrapping around the read-only list of users. We can use
+the getAndUpdate atomic function to update its value without conflicts.
+
+```kotlin
+class UserDownloader(
+    private val api: NetworkService
+) {
+    private val users = AtomicReference(listOf<User>())
+
+    fun downloaded(): List<User> = users.get()
+
+    suspend fun fetchUser(id: Int) {
+        val newUser = api.fetchUser(id)
+        users.getAndUpdate { it + newUser }
+    }
+}
+```
+
+### A dispatcher limited to a single thread
+
+We saw a dispatcher with parallelism limited to a single thread in the Dispatchers chapter. This is the easiest solution
+for most problems with shared states.
+
+```kotlin
+val dispatcher = Dispatchers.IO.limitedParallelism(1)
+var counter = 0
+fun main() = runBlocking {
+    massiveRun {
+        withContext(dispatcher) {
+            counter++
+        }
+    }
+    println(counter) // 1000000
+}
+```
+
+In practice, this approach can be used in two ways:
+
+1. coarse-grained thread confinement
+   we just wrap the whole function with `withContext`, with a dispatcher limited to a single thread.
+   Single thread for doing a whole job. This approach is known as coarse-grained thread confinement.
+2. fine-grained thread confinement
+   we wrap only those statements which modify the state. This approach is more demanding, but it offers us better
+   performance
+
+### Mutex
+
+The last popular approach is to use a `Mutex`. You can imagine it as a room with a single key (or maybe a toilet at a
+cafeteria). Its most important function is lock. When the first coroutine calls it, it kind of takes the key and passes
+through lock without suspension. If another coroutine then calls lock, it will be suspended until the first coroutine
+calls unlock (like a person waiting for a key to the toilet).
+
+```kotlin
+suspend fun main() = coroutineScope {
+    repeat(5) {
+        launch {
+            delayAndPrint()
+        }
+    }
+}
+
+val mutex = Mutex()
+
+suspend fun delayAndPrint() {
+    mutex.lock()
+    delay(1000)
+    println("Done")
+    mutex.unlock()
+}
+// (1 sec)
+// Done
+// (1 sec)
+// Done
+// (1 sec)
+// Done
+// (1 sec)
+// Done
+// (1 sec)
+// Done
+```
+
+Using lock and unlock directly is **risky**, as any exception (or premature return) in between would lead to the key
+never
+being given back (unlock never been called), and as a result, no other coroutines would be able to pass through the
+lock.
+This is a serious problem known as a deadlock (imagine a toilet that cannot be used because someone was in a hurry
+and forgot to give back the key).
+
+So, instead we can use the withLock function, which starts with lock but calls unlock on the `finally` block so that any
+exceptions thrown inside the block will successfully release the lock. In use, it is similar to a synchronized block.
+
+```kotlin
+
+val mutex = Mutex()
+var counter = 0
+fun main() = runBlocking {
+    massiveRun {
+        mutex.withLock {
+            counter++
+        }
+    }
+    println(counter) // 1000000
+}
+```
+
+The important advantage of mutex over a synchronized block is that we suspend a coroutine instead of blocking a thread.
+This is a safer and lighter approach.
+
+It has one important **danger**: a coroutine cannot get past the lock twice (maybe the key stays in the door, so another
+door requiring the same key would be impossible to get past).
+
+The second problem with mutex is that it is not unlocked when a coroutine is suspended. Take a look at the code below.
+It takes over 5 seconds because mutex is still locked during delay.
+
+```kotlin
+
+class MessagesRepository {
+    private val messages = mutableListOf<String>() private
+    val mutex = Mutex()
+
+    suspend fun add(message: String) = mutex.withLock {
+        delay(1000) // we simulate network call messages.add(message)
+    }
+}
+
+suspend fun main() {
+    val repo = MessagesRepository()
+    val timeMillis = measureTimeMillis {
+        coroutineScope {
+            repeat(5) {
+                launch {
+                }
+            }
+        }
+        repo.add("Message$it")
+    }
+    println(timeMillis) // ~5120
+}
+```
+
+When we use a dispatcher that is limited to a single thread, we don’t have such a problem. When a delay or a network
+call suspends a coroutine, the thread can be used by other coroutines.
+
+```kotlin
+
+class MessagesRepository {
+    private val messages = mutableListOf<String>() private
+    val dispatcher = Dispatchers.IO
+        .limitedParallelism(1)
+
+    suspend fun add(message: String) = withContext(dispatcher) {
+        delay(1000) // we simulate network call
+        messages.add(message)
+    }
+}
+
+suspend fun main() {
+    val repo = MessagesRepository()
+    val timeMillis = measureTimeMillis {
+        coroutineScope {
+            repeat(5) {
+                launch {
+                }
+            }
+        }
+        repo.add("Message$it")
+    }
+    println(timeMillis) // 1058
+}
+```
+
+This is why we avoid using mutex to wrap whole functions (coarsegrained approach). When we use it at all, we need to
+do so with great care to avoid locking twice and calling suspending functions.
+
+### Semaphore
+
+Works in similar way to Mutex but can have more than one permit (lock).
+Regarding Mutex, we speak of a single lock, so it has functions `lock`, `unlock` and `withLock`
+So it has functions `acquire`, `release` and `withPermit`.
+
+```kotlin
+
+suspend fun main() = coroutineScope {
+    val semaphore = Semaphore(2)
+    repeat(5) {
+        launch {
+        }
+    }
+}
+// 01
+// (1 sec)
+// 23
+// (1 sec)
+// 4
+```
+
+Semaphore does not help us with the problem of shared state, but it can be used to limit the number of concurrent
+requests, so to implement _rate_ limiting.
+
+```kotlin
+class LimitedNetworkUserRepository(
+    private val api: UserApi,
+) {
+    // We limit to 10 concurrent requests
+    private val semaphore = Semaphore(10)
+    suspend fun requestUser(userId: String) = semaphore.withPermit {
+        api.requestUser(userId)
+    }
+}
+```
+
+### Summary
+
+The most practical solution is to modify a shared state in a dispatcher that is limited to a single thread.
