@@ -44,11 +44,11 @@ functions that can suspend a coroutine.
 
 ## Coroutines under the hood
 
-- suspend fun in reality are fun with additionally parameter at the end: continuation
-- Suspending functions are like state machines, with a possible state at the beginning of the function and after each
+- `suspend fun` in reality is a `fun` with additional parameter at the end: `continuation`
+- `suspend fun` in reality is like state machine, with a possible state at the beginning of the function and after each
   suspending function call.
-- Both the number identifying the state and the local data are kept in the continuation object.
-- Continuation of a function decorates a continuation of its caller function; as a result, all these continuations
+- Both the number identifying the state and the local data are kept in the `continuation` object.
+- `continuation` of a function decorates a `continuation` of its caller function. As a result, all these continuations
   represent a call stack that is used when we resume or a resumed function completes.
 
 ## Part 2: Kotlin Coroutines library
@@ -60,14 +60,17 @@ coroutine builder - bridge from the normal to the suspending world.
 
 most common used:
 
-- launch
-- runBlocking
-- async
+- `launch`
+- `runBlocking`
+- `async`
 
-**launch**
-The way `launch` works is conceptually similar to starting a new `thread` (thread function)
-`launch` is an extension function on the `CoroutineScope` interface. This is part of an important mechanism called
-**structured concurrency**, whose purpose is to build a relationship between the parent coroutine and a child coroutine.
+#### launch
+
+The way `launch` works is conceptually similar to starting a new `thread` (thread function).<br>
+`launch` is an extension function on the `CoroutineScope` interface.<br>
+This is part of an important mechanism called
+**structured concurrency**, whose purpose is to build a relationship between the parent coroutine and a child
+coroutine.<br>
 To some degree, how `launch` works is similar to a `daemon thread` but much cheaper.
 
 ```kotlin
@@ -107,7 +110,8 @@ fun main() {
 }
 ```
 
-**runBlocking builder** (currently rarely used)
+#### runBlocking builder (currently rarely used)
+
 `runBlocking` is a very atypical builder. It blocks the thread it has been started on whenever its `coroutine` is
 suspended (similar to suspending main).
 This means that `delay(1000L)` inside runBlocking will behave like `Thread.sleep(1000L)`:
@@ -147,7 +151,8 @@ Use cases in which `runBlocking` is used:
 - main function, where we need to block the thread, because otherwise the program will end.
 - unit tests, where we need to block the thread for the same reason.
 
-**async builder**
+#### async builder
+
 Similar to `launch`, but produce a value.
 The `async` function returns an object of type `Deferred<T>`, where `T` is the type of the produced value.
 `Deferred` has a suspending method await, which returns this value once it is ready.
@@ -195,7 +200,7 @@ fun main() = runBlocking {
 }
 ```
 
-The async builder is often used to parallelize two processes, such as obtaining data from two different places, to
+The `async` builder is often used to parallelize two processes, such as obtaining data from two different places, to
 combine them together.
 
 ```kotlin
@@ -216,7 +221,8 @@ scope.launch {
 ### Structured Concurrency
 
 If a coroutine is started on `GlobalScope`, the program will not wait for it. As previously mentioned, coroutines do not
-block any threads, and nothing prevents the program from ending. This is why, in the below example, an additional delay
+block any threads, and nothing prevents the program from ending. This is why, in the below example, an
+additional `delay`
 at the end of `runBlocking` needs to be called if we want to see “World!” printed.
 
 ```kotlin
@@ -257,6 +263,8 @@ fun main() = runBlocking {
 }
 ```
 
+#### parent-child relationship
+
 A parent provides a scope for its children, and they are called in this scope.
 This builds a relationship that is called a structured concurrency.
 Here are the most important effects of the parent-child relationship:
@@ -273,9 +281,10 @@ different from other builders.
 
 ### Coroutine context
 
-CoroutineContext is conceptually similar to a map or a set collection. It is an indexed set of Element instances, where
-each Element is also a CoroutineContext. Every element in it has a unique Key that is used to identify it. This way,
-CoroutineContext is just a universal way to group and pass objects to coroutines. These objects are kept by the
+CoroutineContext is conceptually similar to a `map` or a `set` collection. It is an indexed set of `Element` instances,
+where
+each `Element` is also a `CoroutineContext`. Every element in it has a unique Key that is used to identify it. This way,
+`CoroutineContext` is just a universal way to group and pass objects to coroutines. These objects are kept by the
 coroutines and can determine how these coroutines should be running (what their state is, in which thread, etc).
 
 **Adding contexts** - What makes CoroutineContext truly useful is the ability to merge two of them together.
@@ -295,7 +304,7 @@ fun main() {
 }
 ```
 
-When another element with the same key is added, just like in a map, the new element replaces the previous one.
+When another element with the same key is added, just like in a `map`, the new element replaces the previous one.
 
 ```kotlin
 fun main() {
@@ -311,19 +320,17 @@ fun main() {
 **Subtracting elements** - Elements can also be removed from a context by their key using the minusKey function.
 
 **Folding context** - If we need to do something for each element in a context, we can use the fold method, which is
-similar
-to fold for other collections.
+similar to fold for other collections.
 
 ### Coroutine context and builders
 
-So CoroutineContext is just a way to hold and pass data. By default, the parent passes its context to the child, which
+So `CoroutineContext` is just a way to hold and pass data. By default, the parent passes its context to the child, which
 is one of the parent-child relationship effects. We say that the child inherits context from its parent.
 
 Since new elements always replace old ones with the same key, the child context always overrides elements with the same
 key from the parent context. The defaults are used only for keys that are not specified anywhere else. Currently, the
 defaults only set `Dispatchers.Default` when no `ContinuationInterceptor` is set, and they only set `CoroutineId` when
-the
-application is in debug mode.
+the application is in debug mode.
 There is a special context called `Job`, which is mutable and is used to communicate between a coroutine’s child and its
 parent.
 
@@ -333,7 +340,6 @@ parent’s context in a suspending function. To do this, we use the coroutineCon
 suspending scope.
 
 ```kotlin
-
 suspend fun printName() {
     println(coroutineContext[CoroutineName]?.name)
 }
@@ -378,17 +384,13 @@ started in order for them to move to the “Active” state. When a coroutine is
 children are done, the job changes its state to “Completed”, which is a terminal one. Alternatively, if a job cancels or
 fails when running (in the “Active” or “Completing” state), its state will change to “Cancelling”. In this state, we
 have the last chance to do some clean-up, like closing connections or freeing resources (we will see how to do this in
-the next chapter). Once this is done, the job will
-move to the “Cancelled” state.
+the next chapter). Once this is done, the job will move to the “Cancelled” state.
 
 Every coroutine builder from the Kotlin Coroutines library creates its own job. Most coroutine builders return their
 jobs, so it can be used elsewhere. This is clearly visible for launch, where Job is an explicit result type.
 
-There is a very important rule: Job is the only coroutine context that is not inherited by a coroutine from a coroutine.
-Every coroutine creates its own Job, and the job from an argument or parent coroutine is used as a parent of this new
-job.There is a very important rule:<br>
-**Job is the only coroutine context that is not inherited by a coroutine from a
-coroutine**.<br>
+There is a very important rule:<br>
+**Job is the only coroutine context that is not inherited by a coroutine from a coroutine**.<br>
 Every coroutine creates its own Job, and the job from an argument or parent coroutine is used as a parent
 of this new job.
 The parent can reference all its children, and the children can refer to the parent. This parent-child relationship (Job
@@ -407,9 +409,8 @@ fun main(): Unit = runBlocking {
 // (prints nothing, finishes immediately)
 ```
 
-In the above example, the parent does not wait for its children because it has no relation with them. This is because
-the
-child uses the job from the argument as a parent, so it has no relation to the runBlocking.
+In the above example, the parent does not wait for its children because it has no relation with them.
+This is because the child uses the job from the argument as a parent, so it has no relation to the runBlocking.
 When a coroutine has its own (independent) job, it has nearly no relation to its parent. It only inherits other
 contexts, but other results of the parent-child relationship will not apply. This causes us to lose structured
 concurrency, which is a problematic situation that should be avoided.
@@ -451,12 +452,11 @@ println("All tests are done")
 ### Cancellation
 
 Basic cancellation
-The Job interface has a cancel method, which allows its cancellation. Calling it triggers the following effects:
-• Such a coroutine ends the job at the first suspension point (delay in the example below).
+The Job interface has a `cancel` method, which allows its cancellation. Calling it triggers the following effects:
+• Such a coroutine ends the job at the first suspension point (`delay` in the example below).
 • If a job has some children, they are also cancelled (but its parent is not affected).
-• Once a job is cancelled, it cannot be used as a parent for any new coroutines. It is first in the “Cancelling” and
-then in the
-“Cancelled” state.
+• Once a job is cancelled, it cannot be used as a parent for any new coroutines. It is first in the `Cancelling` and
+then in the `Cancelled` state.
 
 We might cancel with a different exception (by passing an exception as an argument to the cancel function) to specify
 the cause. This cause needs to be a subtype of CancellationException, because only an exception to this type can be used
@@ -913,7 +913,7 @@ The most important consequences are:
 
 #### coroutineScope
 
-Unlike async or launch, the body of coroutineScope is called in-place. It formally creates a new coroutine, but it
+Unlike async or launch, the body of `coroutineScope` is called in-place. It formally creates a new coroutine, but it
 suspends the previous one until the new one is finished, so it does not start any concurrent process. Take a look at the
 below example, in which both delay calls suspend runBlocking.
 
@@ -1540,3 +1540,79 @@ class LimitedNetworkUserRepository(
 ### Summary
 
 The most practical solution is to modify a shared state in a dispatcher that is limited to a single thread.
+
+## Testing Kotlin Coroutines
+
+Testing suspending functions in most cases is not different from testing normal functions.
+
+```kotlin
+@Test
+fun `should construct user`() = runBlocking {/*...*/ }
+```
+
+### Testing time dependencies
+
+The difference arises when we want to start testing time dependen- cies. For example, think of the following functions:
+
+```kotlin
+suspend fun produceCurrentUserSeq(): User {
+    val profile = repo.getProfile()
+    val friends = repo.getFriends()
+    return User(profile, friends)
+}
+suspend fun produceCurrentUserSym(): User = coroutineScope {
+    val profile = async { repo.getProfile() }
+    val friends = async { repo.getFriends() }
+    User(profile.await(), friends.await())
+}
+```
+
+the difference is that the first one does it sequentially, while the second one does it simultaneously. The difference
+is that if fetching the profile and the friends takes 1 second each, then the first function would require around 2
+seconds, whereas the first would require only 1. How would you test this?
+
+Notice that the difference arises only when execution of getProfile and getFriends truly takes some time. If they are
+immediate, both ways of producing the user are indistinguishable. So, we might help ourselves by delaying fake functions
+using delay to simulate a delayed data loading scenario:
+
+```kotlin
+class FakeDelayedUserDataRepository : UserDataRepository {
+    override suspend fun getProfile(): Profile {
+        delay(1000)
+        return Profile("Example description")
+    }
+    override suspend fun getFriends(): List<Friend> {
+        delay(1000)
+        return listOf(Friend("some-friend-id-1"))
+    }
+}
+```
+
+the difference will be visible in unit tests: the produceCurrentUserSeq call will take around 1 second, and the
+produceCurrentUserSym call will take around 2 seconds. The problem is that we do not want a single unit test to take so
+much time. We typically have thousands of unit tests in our projects, and we want all of them to execute as quickly as
+possible. How to have your cake and eat it too? For that, we need to operate in simulated time. Here comes the
+kotlinx-coroutines-test library to the rescue with its StandardTestDispatcher
+
+### TestCoroutineScheduler and StandardTestDispatcher
+
+When we call delay, our coroutine is suspended and resumed after a set time. This behavior can be altered thanks to
+TestCoroutineScheduler from kotlinx-coroutines-test, which makes delay operate in virtual time, which is fully simulated
+and does not depend on real time.
+
+```kotlin
+fun main() {
+    val scheduler = TestCoroutineScheduler()
+    println(scheduler.currentTime) // 0
+    scheduler.advanceTimeBy(1_000)
+    println(scheduler.currentTime) // 1000
+    scheduler.advanceTimeBy(1_000)
+    println(scheduler.currentTime) // 2000
+}
+```
+
+To use TestCoroutineScheduler on coroutines, we should use a dispatcher that supports it. The standard option is
+StandardTestDispatcher. Unlike most dispatchers, it is not used just to decide on which thread a coroutine should run.
+Coroutines started with such a dispatcher will not run until we advance virtual time.
+The most typical way to do this is by using `advanceUntilIdle`, which advances virtual time and invokes all the
+operations that would be called during that time if this were real time.
