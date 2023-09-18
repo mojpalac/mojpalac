@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>Unit Testing - MojPalac</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "Unit Testing";
+        var mkdocs_page_input_path = "programming/testing.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> MojPalac
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">MojPalac</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Books</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../books/android_programing_big_nerd_ranch/">Android Programming Big Nerd Ranch</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../books/pragmatic_programmer/">Pragmatic programmer</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../books/rozwoj_w_dwoch_jezykach/">Rozwoj w Dwoch jezykach</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Kotlin coroutines</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../books/kotlin_coroutines/analogy/">kotlin coroutines analogy</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../books/kotlin_coroutines/kotlin_coroutines/">Kotlin Coroutines Deep Dive</a>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Hobbies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hobbies/pool/">Pool</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hobbies/tennis/">Grip</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Programming</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ascii/">ASCII</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../c/">C</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../markdown/">Markdown</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mkdocs/">MKDocs</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/">Notes</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../solid/">SOLID principles</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="./">Unit Testing</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#test-driven-development-tdd">Test Driven Development (TDD)</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#laws">LAWS</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ui-tests">UI tests</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#instrumented-unit-test">Instrumented Unit Test</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#parameterized-unit-tests">Parameterized Unit Tests</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../third_party_library/">3rd Party library</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Android</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../android/AndroidManifest/">AndroidManifest.xml</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../android/UITesting/">UITesting</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../android/notes/">Notes</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../android/storage/">Storage</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../android/threading/">Threading</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../android/views/">Views</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Courses</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="#">Algorithms</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../courses/algorithms/algorithms/">Princeton university algorithms part 1</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Kotlin</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../kotlin/coroutines/">Coroutines</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kotlin/kotlin/">Kotlin</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Tools</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../tools/bugsnag/">Bugsnag</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/git/">Git</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/terminal/">Terminal comments</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/vim/">Vim</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#">SotiMobiControl</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../tools/SotiMobiControl/SotiMobiControl/">Soti MobiControl</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Work</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../work/JustEatIdeas/">JustEatTakeaway Ideas</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../work/ReceiveOrderStructureRefactor/">Receive Order Structure</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../work/goals/">Goals</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../work/interviewQuestions/">Candidate questions</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">MojPalac</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a> »</li>
+<li>Programming »</li>
+<li class="breadcrumb-item active">Unit Testing</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="unit-testing">Unit Testing</h1>
+<p>Unit Tests: readability on the same level as business code
+Unit Tests: more than one assert is still ok if makes sense</p>
+<p>Truth.assertThat(flattened).containsExactlyElementsIn(expected)</p>
+<h2 id="test-driven-development-tdd">Test Driven Development (TDD)</h2>
+<h3 id="laws">LAWS</h3>
+<ol>
+<li><strong>First Law:</strong> You may not write production code until you have written a failing unit test.</li>
+<li><strong>Second Law:</strong> You may not write more of a unit test than is sufficient to fail, and not compiling is failing.</li>
+<li><strong>Third Law:</strong> You may not write more production code than is sufficient to pass the currently failing test.</li>
+</ol>
+<h3 id="ui-tests">UI tests</h3>
+<ol>
+<li>Add test rule @Rule for activity, it will run:
+   a) run before all @before methods
+   b) created for each @test method
+   c) will be destroyed after @after methods
+   you can specify how it should start when creating it with parameter giving false for launchActivity cause that you
+   have implement in @before method creating intent that will starts the activity</li>
+</ol>
+<p>Espresso:
+ViewMatchers - allows for selecting view to interact with with usage of: withId(),withText(), withState() and so on
+ViewAction - what you can perform() on view from viewMatcher,
+ViewAssertion - used inside check(viewAssertion) to verify state</p>
+<h3 id="instrumented-unit-test">Instrumented Unit Test</h3>
+<p>to make it work you need add:
+manifest:
+androidTestImplementation "androidx.arch.core:core-testing:2.0.0"
+testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+androidTestImplementation 'androidx.test:runner:1.1.0'
+androidTestImplementation 'androidx.test:rules:1.1.0'
+class:     @get:Rule
+var instantTaskExecutorRule = InstantTaskExecutorRule()</p>
+<p>var value: T? = null
+val latch = CountDownLatch(1)</p>
+<p>val observer = Observer<t> { t -&gt;
+value = t
+latch.countDown()
+}</t></p>
+<p>observeForever(observer)</p>
+<p>latch.await(2, TimeUnit.SECONDS)
+return value
+}</p>
+<h3 id="parameterized-unit-tests">Parameterized Unit Tests</h3>
+<p>To keep the testing class clean from all the sources for the testing I extracted all testing data to separate file.
+When extracting the source/arguments to different file I noticed below behaviour:</p>
+<ol>
+<li>Using <code>@JvmStatic</code> on source/argument method is causing lint to stop working - I am not sure what is the reason, I couldn't find anything interesting while searching. </li>
+<li>To fix this, I started using <code>@TestInstance(TestInstance.Lifecycle.PER_CLASS)</code> on the test class. This leads to:</li>
+</ol>
+<pre><code>object is not an instance of declaring class java.lang.IllegalArgumentException: object is not an instance of declaring class...
+Suppressed: org.junit.platform.commons.PreconditionViolationException: Configuration error: You must configure at least one set of arguments for this @ParameterizedTest
+</code></pre>
+<p>I couldn't find explanation for this either. </p>
+<p>Though the working solution is implementing <code>ArgumentsProvider</code> for the source/arguments </p>
+<pre><code>internal class MyTestData : ArgumentsProvider {
+    override fun provideArguments(context: ExtensionContext?): Stream&lt;out Arguments&gt; {
+        return Stream.of(
+          Arguments.of(...), 
+          Arguments.of(...), 
+          Arguments.of(...) 
+        );
+    }
+}
+</code></pre>
+<p>and instead of using <code>@MethodSource(...)</code> using <code>@ArgumentsSource(MyTestData::class)</code></p>
+<p>This way arguments/sources are in separate file, and you have them nicely linked to the tested class (as you specify class, instead of the string).
+In case of using different file &amp;&amp; <code>@MethodSource(you.have.to.specify.whole.path.to.MyTestData#function)</code> and it won't auto update itself when changing the package.</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../solid/" title="SOLID principles"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../third_party_library/" title="3rd Party library">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span><a href="../solid/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../third_party_library/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>

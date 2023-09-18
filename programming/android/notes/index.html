@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>Notes - MojPalac</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "Notes";
+        var mkdocs_page_input_path = "programming/android/notes.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> MojPalac
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">MojPalac</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Books</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../books/android_programing_big_nerd_ranch/">Android Programming Big Nerd Ranch</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../books/pragmatic_programmer/">Pragmatic programmer</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../books/rozwoj_w_dwoch_jezykach/">Rozwoj w Dwoch jezykach</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Kotlin coroutines</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../books/kotlin_coroutines/analogy/">kotlin coroutines analogy</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../books/kotlin_coroutines/kotlin_coroutines/">Kotlin Coroutines Deep Dive</a>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Hobbies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../hobbies/pool/">Pool</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hobbies/tennis/">Grip</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Programming</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/">Architecture</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ascii/">ASCII</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../c/">C</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../markdown/">Markdown</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mkdocs/">MKDocs</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notes/">Notes</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../solid/">SOLID principles</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing/">Unit Testing</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../third_party_library/">3rd Party library</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">Android</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../AndroidManifest/">AndroidManifest.xml</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../UITesting/">UITesting</a>
+</li>
+<li class="toctree-l2 current"><a class="reference internal current" href="./">Notes</a>
+<ul class="current">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/">Storage</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../threading/">Threading</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../views/">Views</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Courses</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="#">Algorithms</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../../courses/algorithms/algorithms/">Princeton university algorithms part 1</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Kotlin</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../kotlin/coroutines/">Coroutines</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../kotlin/kotlin/">Kotlin</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Tools</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/bugsnag/">Bugsnag</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/git/">Git</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/terminal/">Terminal comments</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/vim/">Vim</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#">SotiMobiControl</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/SotiMobiControl/SotiMobiControl/">Soti MobiControl</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Work</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/JustEatIdeas/">JustEatTakeaway Ideas</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/ReceiveOrderStructureRefactor/">Receive Order Structure</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/goals/">Goals</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/interviewQuestions/">Candidate questions</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">MojPalac</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a> »</li>
+<li>Programming »</li>
+<li>Android »</li>
+<li class="breadcrumb-item active">Notes</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h3 id="activity-vs-fragment">Activity vs Fragment</h3>
+<p>"You may want to consider using the new Fragment APIs to replace this arbitrary stack of activities with a single activity that more tightly manages its memory. For example if you use the back stack facilities of fragments, when a fragment goes on the back stack and is no longer visible, its onDestroyView() method is called to completely remove its view hierarchy, greatly reducing its footprint.
+https://stackoverflow.com/questions/7536988/android-app-out-of-memory-issues-tried-everything-and-still-at-a-loss/7576275#7576275"</p>
+<p>Activity itself is never killed by the system, system kills whole process (all activities)</p>
+<p>LIFECYCLE
+- you can extend from class LifecycleObserver
+- pass Lifecycle as paramter, later call: lifecycle.addObserver(this-LifecycleObserver)
+- add annotations to methods to be called  @OnLifecycleEvent(Lifecycle.event.ON_XXX)</p>
+<p>LIVEDATA
+- always val,
+- backing field/property poniewz view powinien miec mozliwosc obserwowania livedata, to livedata nie moze byc private, ale jesli jest mutableLiveData wtedy view moze zmienic wartosc, a tak nie powinno byc! z tego wzgledu wprowadza sie backing property, ktora powoduje ze wartosc zmienna zaczyna sie z podkreslnikime i ustawia jako private np. private val _score, natomiast widoczna LiveData dla view bedzie val score: LiveData<int> get() = _score tym samym view moze obserowowac wartosc, ale nie moze jeje zmieniac
+- EASY BUG TO DO - obserowanie state moze powodowac, ze po rotacji otrzymamy kolejny raz state, a powinnismy go dostac tylko raz</int></p>
+<h3 id="jobscheduler">JobScheduler</h3>
+<p>create a class that extends JobService</p>
+<p>override:
+onStartJob -&gt; if returns true then it will continue the the live of the job, false destroys the job. If you want to destroy it on your own call <code>jobFinished(...)</code>
+onStopJob -&gt; if returns true, the job will be redone</p>
+<h3 id="room">Room</h3>
+<ol>
+<li>
+<p>utworzenie entity:
+data klasa ktora ma adnotacje @Entity, jest obiektem ktory chcemy zapisac, musi miec @PrimaryKey</p>
+</li>
+<li>
+<p>utworzenie Data Access Object (DAO):
+klasa abstrakcyjna lub interface, w ktorej wykonujemy operacje na bazie danych -&gt; tworzymy poleceniea poprzez utworzenie metody z adnotacja, jak:</p>
+</li>
+</ol>
+<p>@Insert(onConflict = OnConflictStrategy.IGNORE)
+fun insert(person: Person)
+albo:
+@Query("SELECT * FROM Person ORDER BY surname ASC")
+fun getAll(): LiveData<list\<person>&gt;</list\<person></p>
+<ol>
+<li>
+<p>Utworzenie bazydanych Room
+3.1. klasa dziedziczy po RoomDatabase, musi miec adnotacje @Database(entities = [tutajEntites], version = x, exportSchema = true/false)
+exportSchema - pozwala zachowac w pamiec jak wygladala tabela w danej wersji
+3.2. klasa  abstrakcyjna
+3.3. nalezy utworzyc abstrakcyjne funkcje zwracajace kazde dao
+3.4. obiekt ma byc singletonem, ktorego nalezy utworzyc przy wykorzystaniu synchronized, jak robi sie poprzez asyncTask nalezy dodac tez callback</p>
+</li>
+<li>
+<p>Utworzenie Repository, ktore zbiera wszystkie zrodla pozyskiwania tej samej iformacji (chmura, bazadanych)
+4.1. tutaj inicjalizujemy RoomDatabase
+4.2. bierzemy z rooma dao za pomoca ktorego komonikujemy z roomem
+4.3. dodajemy obiekty do rooma za pomoca asyntaska</p>
+</li>
+<li>
+<p>Tworzymy viewmodel w ktorym tworzymy repo obiekt i z ktorego bierzemy dane</p>
+</li>
+</ol>
+<h3 id="paging">Paging</h3>
+<p>PageLibrary Full version  <br/>
+1. Stworz klase ktora dziedziczy po DataSource (Generalnie sa 3 popularne klasy po ktorych sie dziedziczy:<br/>
+    1. PageKeyedDataSource - dzielimy zrodlo na strony, np. kazda strona ma 10 elementow, strona jest umowna, chodzi o to by wiedziec ze 10 elemnotw tworzy 1 wiekszy element = strona)
+    2. ItemKeyDataSource - ladowanie po itemie tzn, jesli jest cos dla niego specyficznego, i sa uszeregowane to mozna wykorzystac to do ladowania
+    3. PositionalDataSource - kiedy wiadomo jaka jest wielkosc listy)</p>
+<p>W przypadku PageKeyedDataSource<key, value=""> mozna uzyc <int, item=""> do tworzenia listy, gdzie Int odpowiada numerowi stronie, a item to dane ktore nas interesuja, <br/>
+3 metody do nadpisania: loadBefore - w przypadku requestu bezporesednio do internetu, nie potrzeba implementowac  <br/>
+loadInitial - pierwsze ladowanie danych, request w repo(dobrze jest przekazac jako parametr params.requestedLoadSize )  ktory nastepnie przekazujemy do callback.onResult() 
+loadAfter - nastepne ladowania danych jw. <br/>
+istotne jest utworzenie pol 
+    val currentPage = 1
+val nextPage = currentPage + 1, ktore przekazujemy do callbacku i w loadAfter() przed kazdym requestem nadpisujemy( currentPage = params.key( bo key jest item== current page), nextpage = currentPage + 1) </int,></key,></p>
+<ol>
+<li>
+<p>Utworzenie klasy ktora dziedziczy po DataSource.Factory<key, item=""> <parametry datasource="" dla="" jak="" same="" takie=""> 
+utworzenie pola np. source ktory jest MutableLiveData<mydatasource>() <br/>
+nadpisujemy onCreate tworzymy tam zmienna lokalna MyDataSource() a jej wartosc postujemy do source liveData, zwracamy zmienna lokalna   </mydatasource></parametry></key,></p>
+</li>
+<li>
+<p>Utworzenie metody w repo ktora zwraca LiveData<pagedlist\<item>&gt; poprzez utworzenie LivePageDataBuilder.build()   </pagedlist\<item></p>
+</li>
+<li>w aktywnosci zmieniamy z setowania listy do adaptera na uzywanie adapter.submitList(lista)   </li>
+<li>w Adapterze zmieniamy z dziedziczenia na PagedListAdapter<item, thisadapter.myviewholder="">(DIFF_CALLBACK) </item,></li>
+<li>(DIFF_CALLBACK) to DiffUtil.ItemCallback<item> ktory ma 2 metody na sprawdzanie itemow (zazwyczaj po ID) i kontentu - porownanie obiektow do siebie (itemOld == itemNew) </item></li>
+<li>nie nadpisujemy getItemCount </li>
+<li>na onBindViewHolder uzywamy getItem() bo nie ma pola dla listy!  </li>
+</ol>
+<p>PAGING Library in Room</p>
+<ol>
+<li>w dao object zwracamy DataSource.Factory<int, person=""> zamiast livedata</int,></li>
+<li>ta sama zmiana w repo</li>
+<li>w viewModel tworzymy livedata poprzez wywowalnie na obiekcie z repo .toLiveData(int pageSize)</li>
+<li>w aktywnosci zmieniamy z setowania listy do adaptera na uzywanie adapter.submitList(lista)</li>
+<li>w Adapterze zmieniamy z dziedziczenia na PagedListAdapter<item, thisadapter.myviewholder="">(DIFF_CALLBACK)</item,></li>
+<li>(DIFF_CALLBACK) to DiffUtil.ItemCallback<item> ktory ma 2 metody na sprawdzanie itemow (zazwyczaj po ID) i kontentu - porownanie obiektow do siebie (itemOld == itemNew)</item></li>
+<li>nie nadpisujemy getItemCount</li>
+<li>na onBindViewHolder uzywamy getItem() bo nie ma pola dla listy!</li>
+</ol>
+<h3 id="loaders">Loaders</h3>
+<p>Why not use loaders:
+https://medium.com/inloopx/its-time-to-ditch-loaders-in-android-6492616775f7</p>
+<h3 id="dagger">Dagger</h3>
+<p>DAGGER2
+Dependancy Injection - tworzenie obiektow poprzez dodatnie do konstrukora obiektow zaleznych, a nie tworzenie ich lokalnie
+Dagger2 sklada sie z nastepujacych elementow:
+- Module - klasa z adnotacja @Module, metody ktore dostarczaja obiekty z adnotacja @Provides i czesto @Singleton - jezeli obiekt jest ciezki w inicjializacji i moze byc uzyty ponownie,
+- Components - klej pomiedzy modulami a @Inject, to interfacae, ktory oznaczamy @Component(modules = {zaleznyModul1.class, zaleznyModul2.class}) metody interfacu maja za zadanie dostarczyc obiekty z modulow. Komponenty sa swiadome zakresu obiketow w module i jesli obiekty sa singletom mozna onaczyc kompent aby rowniez byc singletonem
+- @Inject - adnotacja ktora umozliwia dostarczenie przez Dagger2 potrzebnych obiektow, dodatkowo jezeli klasa X ktora sama jest tworzona w module i jej parameter Y jest tworzony w module, to ostatecznie nie musi byc tworzona w module :P Poniewaz dagger2 potrafi znalezc zaleznosci. W takim przypadku wystarczy oznaczyc konstrukor jako  class X @Inject constructor(y: Y) , nalezy tez pamietac o tym by klasa wtedy byla @Singleton (jesli w module tak bylo) i nalezy usunac metody z modulu.
+na metodach @Inject uzywamy TYLKO aby zastapic this (tak powiedzial Jack Wharton)
+By dostac obiekty tworzymy jak najszybsciej Component w kodzie np. w klasie Aplikacji za pomoca DaggerNameOfComponent.builder()... .build() wtedy mamy dostep do metod z componentu</p>
+<h3 id="picasso">Picasso</h3>
+<p>mozna uzywac posredniego serwera (np. thumbor) do stwierdzania jakiej wielkosci ma byc obrazek, wtedy dostajemy gotowej wielkosci obraz -&gt; nie trzeba go zmniejszac na telefonie -&gt; oszczednoscc CPU i baterii</p>
+<h3 id="threading">THREADING</h3>
+<p>AsyncTask nie moze byc inner class UIControllerze bo bedzie trzymal referencje</p>
+<p>StrickMode - pozwala na wykrycie operacji I/O na MainThread
+CPUProfiler - displays all
+there are ANR trace file that you can get from the device
+ANR - moze odbyc sie tez przez inne thready jak jest lockResource (Deadlock) - resource wykorzystywany przez inny watek, ktory jest potrzebny w glowny np. przez synchronized(resource) a ten tam resource jest przekazany do asynctaska</p>
+<p>slow rendering jest nazywany jank</p>
+<p>Main thread (Ui Thread) zadaniem jest wykonywanie blokow pracy z thread-safe kolejki do moementu zakonczenie pracy.
+W tym zawiera sie: callbacki od lifecycle, wydarzenia od uzytkownia, od innych aplikacji i procesow, zarzadzanie viewsow (dlatego tez, nie daje sie zadnych referencji viewsow do innych watkow!- updated tylko poprzez wlascicicela Activity/Fragment), animacji</p>
+<p>System probuje sie przerysowac co kazde 16 milisekund - jesli jest za duzo rzeczy do zrobienia na Main threadzie to nie zdazy - jank -&gt; bedzie musial skipowac framey - co oznacze ze ich nie odsiweza.</p>
+<p>AsyncTask(90% use caseow) nie moze byc inner(w kotlinie wystarczy usunaca inner) class Activity/Fragment bo bedzie trzymam referencje -&gt; leak + jank
+onPreExecution odbywa sie na MainThreadzie
+doInBackground - juz na workerThreadzie
+onPostExecution - MainThread
+onCancel - MainThread</p>
+<p>AasynTask ma 1 worker thread</p>
+<p>HandlerThread - sklada sie z:
+- loopera
+kiedy praca do wykonania jest naprawde duza - zwracamy do UI Threada za pomoaca runOnUiThread</p>
+<p>ThreadPoolExecutor - tworzy thready na ktorych moze byc wykonana pracy duzej ilosci malej, maks ilosc watkow mozna pobrac z sytemu.</p>
+<p>IntentService - w momencie kiedy chcesz odpowiedziec intentowi, ale wisz ze praca troche zajmie a UI aktualnie jest w backgroundzie, Handler zly bo by czekal godzinamy na to az intent przyjdzie (a w miedzyczasie zjada resources)</p>
+<p>wszystkei te klasy same ustawiaja thread priority, defaultowo thread priority bedzie takie samo jak maina - 0 (DEFAULT)
+Foreground Threads - 95% execution time
+background Threads - 5%</p>
+<p>Jak aplikacja jest odpalana Android tworzy linux proces dla tej aplikacji z main threadem</p>
+<h3 id="modularization">Modularization</h3>
+<p>androidx-dependency-tracker</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../UITesting/" title="UITesting"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../storage/" title="Storage">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span><a href="../UITesting/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../storage/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>

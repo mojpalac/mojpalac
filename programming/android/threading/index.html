@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>Threading - MojPalac</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "Threading";
+        var mkdocs_page_input_path = "programming/android/threading.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> MojPalac
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">MojPalac</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Books</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../books/android_programing_big_nerd_ranch/">Android Programming Big Nerd Ranch</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../books/pragmatic_programmer/">Pragmatic programmer</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../books/rozwoj_w_dwoch_jezykach/">Rozwoj w Dwoch jezykach</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Kotlin coroutines</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../books/kotlin_coroutines/analogy/">kotlin coroutines analogy</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../books/kotlin_coroutines/kotlin_coroutines/">Kotlin Coroutines Deep Dive</a>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Hobbies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../hobbies/pool/">Pool</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hobbies/tennis/">Grip</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Programming</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/">Architecture</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ascii/">ASCII</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../c/">C</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../markdown/">Markdown</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mkdocs/">MKDocs</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notes/">Notes</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../solid/">SOLID principles</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing/">Unit Testing</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../third_party_library/">3rd Party library</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">Android</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../AndroidManifest/">AndroidManifest.xml</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../UITesting/">UITesting</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/">Notes</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/">Storage</a>
+</li>
+<li class="toctree-l2 current"><a class="reference internal current" href="./">Threading</a>
+<ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="#loci-12a-bedroom">Loci 12A bedroom</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#thread">Thread</a>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#looper-queue">Looper &amp; queue</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#cpu-operations-basics">CPU Operations basics</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#multiprocessing-system">Multiprocessing system</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#multithreading">Multithreading</a>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#visibility-problem">Visibility problem</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#atomicity-problem">Atomicity problem</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#happens-before">Happens Before</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#garbage-collector">Garbage Collector</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-leak">Memory Leak</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../views/">Views</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Courses</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="#">Algorithms</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../../courses/algorithms/algorithms/">Princeton university algorithms part 1</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Kotlin</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../kotlin/coroutines/">Coroutines</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../kotlin/kotlin/">Kotlin</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Tools</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/bugsnag/">Bugsnag</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/git/">Git</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/terminal/">Terminal comments</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/vim/">Vim</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#">SotiMobiControl</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/SotiMobiControl/SotiMobiControl/">Soti MobiControl</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Work</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/JustEatIdeas/">JustEatTakeaway Ideas</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/ReceiveOrderStructureRefactor/">Receive Order Structure</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/goals/">Goals</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/interviewQuestions/">Candidate questions</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">MojPalac</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a> »</li>
+<li>Programming »</li>
+<li>Android »</li>
+<li class="breadcrumb-item active">Threading</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="threading">Threading</h1>
+<h3 id="loci-12a-bedroom">Loci 12A bedroom</h3>
+<ol>
+<li>open doors - <a href="#Thread">Thread</a></li>
+<li>taking of shirt - <a href="#Looper-&amp;-queue">Looper &amp; Queue</a></li>
+<li>taking of trousers - <a href="#CPU-Operations-basics">CPU operations basics Single-Tasking System</a></li>
+<li>lift the duvet up -  <a href="#Preemptive multitasking system">Preemptive multitasking system</a></li>
+<li>snakes on bedsheet - <a href="#Multiprocessing system">Multiprocessing system</a></li>
+<li>bedsheet is clean - <a href="#Visibility problem">Visibility problem</a></li>
+<li>laying head on pillow - <a href="#Atomicity problem">Atomicity problem</a></li>
+<li>Domi 'give it to me'! - <a href="#Atomic">Atomic value</a></li>
+<li>DragonBall fusion - <a href="#Synchronized">Synchronized</a></li>
+<li>picking up the fibres - <a href="#Happens Before">Happens-Before</a></li>
+<li>bin - <a href="#Garbage Collector">Happens-Garbage Collector</a></li>
+<li>oil leaking from bulb <a href="#Memory Leak">Memory Leak</a></li>
+</ol>
+<p>I am going sleep, and I am standing in open bedroom doors I spot the yarn laying on the floor that which fibre goes
+string to bed.
+Next I take of my t-shirt and the letters fall out from under the shirt, small creature starts collecting them, the
+letters are floating around the creature in circles.
+In the same moment, the letters one by one are flying out by the window.
+New machines fly in, and I'm telling it in binary to help me take of my trousers.
+The machine is analyzing the code and starts taking of the trousers in steps.
+After each step machine screams the count of instructions completed.
+I am starting to lifting the duvet and I notice that I have 4 hands that are lifting the duvet.
+Movements of all hands is very robotic - each hand is moving in short sequences with lagging.
+Only one hand is moving at a specie time, this hand is changing color to glowing green based on at which hand I am
+looking at. After lifting the duvet I can see the fabrics from the yarn on the bedsheet.
+They are in red color, and it's start forming and moving like snakes parallel into different directions.
+Suddenly 2nd me tells me that he doesn't see the snakes, while I can still see the snakes.
+He explains to me that it's become of the transparent screen between me and the bed, I move to a side to change the
+angle
+and I can see the screen with dollars floating on the screen which were not visible before, no sneaks either.
+I lay down on the pillow which suddenly becomes visible atoms flying above my head.
+I'm catching the atoms with my hands but when I'm opening hands I can see only one atom.
+Domi enters the bedroom and screams "give it to me"!, I am saying that I can't give it right now.
+and I will give it her once I will finish playing with atom.
+Then we are both doing like in dragonball fusion screaming "synchronized!" and I'm passing an atom to Domi.
+Domi is holding an atom, and she doesn't see snakes, problem solved!
+I stared to picking up the fibres from yarn and I remind myself that this happened before.
+The fibre leads me to the bucket.
+When I am standing I can feel drops falling on my head, it's looks like an oil.
+I look up and I see bulb that is covered in oil which is dripping with oil.</p>
+<h2 id="thread">Thread</h2>
+<p>single in process task</p>
+<p>creation in Android:</p>
+<ol>
+<li>extend thread class</li>
+<li>creating runnable and passing to constructor of <code>Thread(myRunnable)</code></li>
+</ol>
+<p>advantage of 2nd approach is using "composition over inheritance"</p>
+<p>Android UI thread lives as long as app</p>
+<div class="mermaid">flowchart LR
+    A[PROCESS] &lt;---&gt; B["APPLICATION + SANDBOX"]
+</div>
+<p>Each process can host one or more tasks. In Android these are Threads.
+Threads <em>share</em> the execution environment with the parent process. They can communicate and exchange data.
+In android each program (application) gets its own task.
+This task is associated with isolated execution environment (sandbox).</p>
+<p>for each Android component (<code>Activity</code>, <code>Service</code>, <code>BroadcastReceiver</code>, <code>Loader</code>) you can specify android process
+in <code>AndroidManifest.xml</code></p>
+<p>you can share process with different app when using same Linux User ID and same certificate.</p>
+<p><code>Handler</code> - simply wraps same thread which loops "forever" as long as it's not stopped.
+<code>Lopper.getMainLooper()</code> - abstraction over UI thread which loops over runnable</p>
+<p>The safe way is to not create <code>Handler</code>s and lookers and only use:
+<code>Handler(Looper.getMainLooper())</code> as this is the only way to get UI thread</p>
+<p><code>View.post(Runnable)</code> &amp; <code>Activity.runOnUiThread(runnable)</code> - can be used to execute code on UI thread</p>
+<p>Difference between <code>Looper.getMainLopper().post()</code> and <code>runOnUiThread()</code>:</p>
+<ul>
+<li><code>post()</code> is adding a block to execute to a queue which means the block will be executed in future</li>
+<li><code>runOnUiThread()</code> - if current thread is Main it will immediately execute code,
+  otherwise it will fall back to <code>post()</code></li>
+</ul>
+<h3 id="looper-queue">Looper &amp; queue</h3>
+<p>Threads are using message queue as "inbox" for messages.
+Threads are using Looper to manage message queue.</p>
+<div class="mermaid">flowchart LR
+  subgraph Thread
+    direction LR
+    subgraph Queue
+    direction TB
+      m1 --&gt; m2
+      m2 --&gt; m3
+      m3 --&gt; mn
+    end
+    Queue --&gt; Looper  
+  end
+</div>
+<p>Handler.Thread has a build in Looper.
+Handler itself is a "postman" that delivers messages (each message is attached to handler).
+Message has to be posted and consumed inside the looper.</p>
+<h3 id="cpu-operations-basics">CPU Operations basics</h3>
+<div class="mermaid">graph LR
+A["send instruction from system"]--"1000 1001 1101 1000"--&gt;  B["CPU"]
+</div>
+<p>"Move the content of register (CPU internal storage) BX into register AX"</p>
+<div class="mermaid">graph LR
+A["Operating System"]--"Machine code"--&gt;  B["CPU"]
+B --&gt; C["Memory"] &amp; D["I/O devices"]
+</div>
+<p><strong>System</strong> = CPU + Operating System</p>
+<h4 id="single-tasking-system">Single-Tasking system</h4>
+<p>execute the machine code of one single task until the task terminates.
+It's not used in most popular systems.</p>
+<div class="mermaid">graph LR
+i0 --- i1 --- i2 ---i3--... ---in
+
+subgraph PC
+i1
+end
+</div>
+<ul>
+<li>i0 - instruction</li>
+<li>PC, program counter - moves from one instruction to another</li>
+</ul>
+<h4 id="preemptive-multitasking-system">Preemptive multitasking system</h4>
+<div class="mermaid">graph LR
+
+subgraph task 2
+j0 --- j1 --- j2 ---j3--... ---jn
+end
+
+subgraph task 1
+i0 --- i1 --- i2 ---i3--... ---in
+end
+
+subgraph Program Counter
+pc--1--&gt;i0
+pc--2--&gt;i1
+pc--3--&gt;j0
+pc--4--&gt;j1
+pc--5--&gt;i2
+pc--6--&gt;j2
+end
+</div>
+<div class="mermaid">flowchart LR
+
+
+OS -.yield.-&gt; i1
+OS -.yield.-&gt; j1
+OS -.yield.-&gt;i2
+OS -.yield.-&gt; j2
+
+subgraph CPU instruction executing
+  direction TB 
+  i0 --&gt; i1 --&gt; j0 --&gt;j1--&gt; i2 --&gt; j2 --&gt;...
+end
+
+
+</div>
+<p><strong>yielding</strong> - releasing the CPU by the Operating System. It allows other task to start using the CPU</p>
+<p>Pros:</p>
+<ul>
+<li>allows concurrent tasks</li>
+<li>guarantees system responsiveness
+  cons:</li>
+<li>very complex system in the terms of creation. Used by majority of general purpose Operating Systems e.g. Android</li>
+</ul>
+<h4 id="cooperative-multitasking-system">Cooperative multitasking system</h4>
+<p>Similar to preemptive multitasking system, but it's the that itself that is responsible for yielding.</p>
+<p>Pros:</p>
+<ul>
+<li>allows concurrent execution of multiple tasks as yieldingly can happen thousands of ime on one second.
+  Cons:</li>
+<li>one misbehaving task can claim resources for long time thus making the entire system unresponsive</li>
+</ul>
+<h3 id="multiprocessing-system">Multiprocessing system</h3>
+<p>System with more than one CPU</p>
+<div class="mermaid">graph LR
+A["Operating System"]--"Machine code"--&gt;  B["CPU"]
+B --&gt; C["Memory"] &amp; D["I/O devices"]
+
+A--"Machine code"--&gt;  F["CPU"]
+F --&gt; H["Memory"] &amp; I["I/O devices"]
+</div>
+<p>Pros:
+Allows for parallelism</p>
+<div class="mermaid">graph LR
+
+subgraph Concurrency
+parallelism
+end
+</div>
+<h2 id="multithreading">Multithreading</h2>
+<p>decomposition of app logic into multiple concurrent tasks</p>
+<p>concurrency - tasks <u>appear</u> to run at the same time</p>
+<p>parallelism - tasks to run at the same time e.g. by using different core in CPU</p>
+<h3 id="visibility-problem">Visibility problem</h3>
+<p>Having 2 threads, system can decide that particular thread don't need to access filed from memory,
+rather it can use value from cache. System does it for performance improvements.
+This can lead to situation where another thread is updating the value of the filed
+but first thread is not reading updating value but reads value from cache.</p>
+<div class="mermaid">sequenceDiagram
+participant Thread 1
+participant Thread 2
+participant Thread 1 Cache
+participant Memory
+
+  Thread 1-&gt;&gt; Memory: getMyInt()
+  Memory --&gt;&gt; Thread 1: myInt = 0
+  Thread 1-&gt;&gt; Thread 1 Cache: cache MyInt* = 0
+  Thread 2-&gt;&gt; Memory: myInt = setMyInt(1)
+  Memory --&gt; Memory: myInt = 1
+  Thread 1-&gt;&gt; Thread 1 Cache: getMyInt()
+  Thread 1 Cache --&gt;&gt; Thread 1: myInt = 0
+</div>
+<p><code>volatile</code> (kotlin <code>@Volatile</code>) &amp;&amp; <code>final</code> keywords in java makes sure that thread will read and write value from/to
+memory.
+(Though it doesn't solve the atomicity problem mentioned below)</p>
+<pre><code class="language-kotlin">@Volatile
+var counter: int = 0
+</code></pre>
+<h3 id="atomicity-problem">Atomicity problem</h3>
+<p>Multiple threads read the same value from memory e.g. <code>myInt = 3</code>,
+and increment it because each thread had the same value at the beginning the new value is 4
+instead of 3 + n, (where n is the number of threads).</p>
+<div class="mermaid">sequenceDiagram
+participant Thread 3
+participant Thread 2
+participant Thread 1
+participant Memory
+
+  Thread 1-&gt;&gt; Memory: getMyInt()
+  Thread 2-&gt;&gt; Memory: getMyInt()
+  Memory --&gt;&gt; Thread 1: myInt = 0
+  Memory --&gt;&gt; Thread 2: myInt = 0
+  Thread 1-&gt;&gt; Thread 1: myInt++
+  Thread 2-&gt;&gt; Thread 2: myInt++
+  Thread 1-&gt;&gt; Memory: setMyInt(1)
+  Thread 2-&gt;&gt; Memory: setMyInt(1)
+  Thread 3-&gt;&gt; Memory: getMyInt()
+  Memory --&gt;&gt; Thread 3: myInt = 1
+
+</div>
+<p>When thread is doing "read, modify, write" non-other thread can access the same instance
+otherwise we have race condition.
+In case of "race condition" you are not guarantee the order in which particular statements will be run.</p>
+<h4 id="atomic">Atomic</h4>
+<p><code>atomic</code> values = guarantees that only one thread can "read, modify, write" at the given time,
+all others threads have to wait.
+It does not guarantee that thread will not cache the value (but the thread should never read the value from cache).</p>
+<h4 id="synchronized">Synchronized</h4>
+<p><code>synchronized</code> (kotlin <code>@Synchronized</code>) - allows to handle "race condition".</p>
+<pre><code class="language-kotlin">@Synchronized
+fun incrementCounter() {
+    counter++
+}
+
+</code></pre>
+<p>When 2 threads are calling method which has <code>synchronized</code> keyword,
+you are guaranteed that once the thread no. 1 finishes execution on synchronised
+only then thread no. 2 will be able to execute the code.
+note: it does not guarantee who will be next holder of monitor (it can be same thread)</p>
+<p>Metaphor - taking stick only the one that is currently holding the stick is able to talk,
+all the others have to wait. This is exactly the <code>Lock</code> "monitor" object.
+Only one thread at a time can hold it: <code>synchronized</code> (Lock)<br/></p>
+<p>Pros:</p>
+<ul>
+<li>Guarantees atomicity and visibility</li>
+</ul>
+<p>cons:</p>
+<ul>
+<li>it's very complex, and it's easy to make a mistake</li>
+<li>performance as it blocks other threads, though it's not always significant
+  (depends on the environment not really important on Android)</li>
+</ul>
+<h3 id="happens-before">Happens Before</h3>
+<p>It is lower level concept than "visibility".
+Visibility is a <strong>function</strong> <strong>of</strong> established (or not) <strong>happens-before</strong> relationships between actions.</p>
+<p>2 actions can have happens-before relationships if:</p>
+<ol>
+<li>First action is ordered before second action.</li>
+<li>First action happens before second</li>
+<li>First action is visible to second action</li>
+</ol>
+<p>Why we need happens-before?
+Even though we write our code ordered.
+In reality there is no guarantee of sequence when we have multithreading.
+Compilers, JVM or CPU can reorder sequence, unless we define the constraints e.g. happens-before.</p>
+<p>Rules:</p>
+<ol>
+<li>if only 1 thread then order in code will be respected</li>
+<li>if action <code>x</code> synchronizes* with action <code>y</code></li>
+<li>Everything before <code>thread.start()</code> is visible for thread.</li>
+</ol>
+<p>*
+    - includes: <code>synchronized</code> keyword, read and write <code>volatile</code>s, <code>java.util.concurrent</code></p>
+<p>If we have <code>volatile</code> filed (which guarantees that thread will read value from memory)
+and later call to <code>thread.start()</code> we have happens-before relation.
+Therefore, thread will always be checking for the value of the variable in the memory. As field was create before the
+thread.</p>
+<h3 id="garbage-collector">Garbage Collector</h3>
+<p>GC - System process which automatically reclaims memory by discarding objects
+that are no longer in use (not reachable)</p>
+<p><strong>Root</strong> - object which is always consider by GC as reachable thus never cleaned by GC.</p>
+<p>Roots in Android App:
+1. object referenced from static fields
+2. Instances of application class (it's almost always the case)
+3. Live threads</p>
+<p>Object reachability flow:</p>
+<div class="mermaid">flowchart LR
+
+    A{"is root?"} --yes--&gt; B[reachable]
+    C --yes--&gt; D{"is any parent reachable?"}
+    D --yes--&gt; B
+    A --no--&gt; C{is referenced?}
+    C --no--&gt; E[not reachable]
+    D --no--&gt; E
+
+    style B fill:#0F0
+    style E fill:#F00
+
+</div>
+<p><strong>Circular Reference</strong></p>
+<div class="mermaid">flowchart LR
+MyObject1 &lt;---&gt;  MyObject2
+</div>
+<p>Garbage Collector is able to recognize circular reference and knows that both object are not reachable,
+hence it will release memory for myObject1 and myObjet2</p>
+<p>Each application can ask the system about how much memory is available for it by calling: getMemoryClass()
+Foreground application are less likely to be killed by system</p>
+<p>If application is Least-Recently-Used (so it's not in foreground, but in recently used) and system is running out of
+memory then it's starts killing from bot-to-top but also checks which takes the most memory and might kill it</p>
+<h3 id="memory-leak">Memory Leak</h3>
+<p>object that is no longer used but can't be Garbage Collected</p>
+<p>Memory assignment</p>
+<pre><code class="language-kotlin">class MyActivity : Activity {
+    lateinit var myRepo: Repo
+    override fun onCreate() {
+        myRepo = Repo()
+    }
+}
+</code></pre>
+<p>Memory model of the above code</p>
+<div class="mermaid">flowchart TB
+    MyActivity --Reference--&gt; MyRepo
+</div>
+<p>Each anonymous (which is inner class) have implicit reference to enclosing class objects.
+So creating anonymous thread in onCreate of Activity then starting thread and closing Activity will cause memory leak as
+long as thread is running,
+because thread has reference to Activity.
+Each thread is Root for GC, hence GC can't clear the memory of Activity - memory leak.</p>
+<p>Thread termination in Android:</p>
+<ol>
+<li>Allow to complete successfully by return in run()</li>
+<li>Return from run() in response to an error</li>
+<li>return from run() in response to external flag</li>
+<li>return from run() in response to interruption</li>
+</ol>
+<pre><code class="language-java">lateinit var leakingObject: LeakingObject 
+
+override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    leakingObject = LeakingObject(view)
+}
+</code></pre>
+<p>It's leaking because every time on new assignment to LeakingObject,
+the old one will be held in memory without assignment as Long as it's attached to the root</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../storage/" title="Storage"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../views/" title="Views">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span><a href="../storage/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../views/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

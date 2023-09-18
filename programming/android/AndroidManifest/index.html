@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>AndroidManifest.xml - MojPalac</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "AndroidManifest.xml";
+        var mkdocs_page_input_path = "programming/android/AndroidManifest.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> MojPalac
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">MojPalac</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Books</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../books/android_programing_big_nerd_ranch/">Android Programming Big Nerd Ranch</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../books/pragmatic_programmer/">Pragmatic programmer</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../books/rozwoj_w_dwoch_jezykach/">Rozwoj w Dwoch jezykach</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Kotlin coroutines</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../books/kotlin_coroutines/analogy/">kotlin coroutines analogy</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../books/kotlin_coroutines/kotlin_coroutines/">Kotlin Coroutines Deep Dive</a>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Hobbies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../hobbies/pool/">Pool</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hobbies/tennis/">Grip</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Programming</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/">Architecture</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ascii/">ASCII</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../c/">C</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../markdown/">Markdown</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mkdocs/">MKDocs</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notes/">Notes</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../solid/">SOLID principles</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing/">Unit Testing</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../third_party_library/">3rd Party library</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">Android</a>
+<ul class="current">
+<li class="toctree-l2 current"><a class="reference internal current" href="./">AndroidManifest.xml</a>
+<ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="#_1">\</a>
+<ul>
+<li class="toctree-l4"><a class="reference internal" href="#taskaffinity">taskAffinity</a>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#launchmode">launchMode</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../UITesting/">UITesting</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/">Notes</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/">Storage</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../threading/">Threading</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../views/">Views</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Courses</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="#">Algorithms</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../../courses/algorithms/algorithms/">Princeton university algorithms part 1</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Kotlin</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../kotlin/coroutines/">Coroutines</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../kotlin/kotlin/">Kotlin</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Tools</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/bugsnag/">Bugsnag</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/git/">Git</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/terminal/">Terminal comments</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/vim/">Vim</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#">SotiMobiControl</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/SotiMobiControl/SotiMobiControl/">Soti MobiControl</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Work</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/JustEatIdeas/">JustEatTakeaway Ideas</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/ReceiveOrderStructureRefactor/">Receive Order Structure</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/goals/">Goals</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/interviewQuestions/">Candidate questions</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">MojPalac</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a> »</li>
+<li>Programming »</li>
+<li>Android »</li>
+<li class="breadcrumb-item active">AndroidManifest.xml</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="androidmanifestxml">AndroidManifest.xml</h1>
+<p>loci: 12A Bathroom</p>
+<ol>
+<li>manifest in front of the door</li>
+<li>Closing Doors with noise - affinity</li>
+<li>Locking the doors - standard</li>
+<li>opening toilet - singleTop</li>
+<li>sitting - singeTask</li>
+<li>it already exists - singleInstance</li>
+<li>rolls of paper - singleInstancePerTask</li>
+<li>flush - lyst issue</li>
+</ol>
+<p>story:
+I'm going through the crowd that is standing in front of the bathroom doors, I enter bathroom closing the doors with
+cracking noise.
+Next I am locking the doors and looks how after the locking, the lock is falling down and stacks on previously used
+locks.
+I can see that there are multiple lids on toilet so Im removing all of them except one and put the lid up.
+When I try to sit some people start to screaming that they were here before me and I should go to queue.
+I'm telling them that I was here before and show them photo, they exit.
+I'm doing my best, but it just can't happen. Then I realize that I was here before because of the same reason, so it
+means that somewhere it already exists! 
+I take the rolls of toilet paper and use them as rods (paper is line) to find the instance.
+After fail attempt I flush everything and notice that rolls of paper are back where they were. </p>
+<h2 id="_1">\<activity></activity></h2>
+<h3 id="taskaffinity">taskAffinity</h3>
+<pre><code>android:taskAffinity="string"
+</code></pre>
+<p>The affinity determines two things — the task that the activity is <strong>re-parented</strong> to (see the <code>allowTaskReparenting</code>
+attribute) and the task that will <strong>house</strong> the activity when it is launched with the FLAG_ACTIVITY_NEW_TASK flag.</p>
+<p>By default, the taskAffinity is based on <code>Applicaiton</code> <code>namespace</code> (when is not set it's taken from package).</p>
+<p><strong>taskAffinity takes precedence over <a href="#launchmode">launchMode</a>.</strong></p>
+<h3 id="launchmode">launchMode</h3>
+<p>overall launchMode on its own only decides how Activity should be launched (either in the same task or not).
+But it's not the only thing that can impact how Activity is started.
+It also depends on current stack.
+My feelings are that the best what we can do it to use <code>standard</code> behaviour as often as possible.
+In some specific cases we can use also <code>singleTop</code>. Using multiple activities can be painful otherwise!
+e.g. in below scenario:</p>
+<p>Task1: ActivityA(singleTask)
+Task2: ActivityB (singleInstance) <it activitya="" from="" started="" was="">
+now ActivityB wants to start ActivityC with flag Intent.FLAG_ACTIVITY_NEW_TASK.
+(All activities have the same affinity)</it></p>
+<p>What will be the list of Task and Activities after starting ActivityC?
+Task1: ActivityA(singleTask), ActivityC
+Task2: ActivityB (singleInstance) <it activitya="" from="" started="" was="">
+note: the task hierarchy is equivalent to the case if we wouldn't add the flag Intent.FLAG_ACTIVITY_NEW_TASK at all.</it></p>
+<p>Once ActivityC is opened pressing back button takes user to ActivityA</p>
+<p>In above case system checks that the task for the same affinity is existing and the task is not launched as
+singleInstance, so it attaches new Activity to it.
+to prevent the above we can use below:
+<code>Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK</code>
+using this will give below situation:</p>
+<p>Task1: ActivityA(singleTask),
+Task2: ActivityB (singleInstance) <it activitya="" from="" started="" was="">
+Task3: ActivityC(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)</it></p>
+<p>Once ActivityC is opened pressing back button takes user to ActivityB -&gt; ActivityA</p>
+<p>alternative, we can use:
+<code>Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK</code>
+this will give below situation:</p>
+<p>Task1: ActivityC(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK),
+Task2: ActivityB (singleInstance) <it activitya="" from="" started="" was=""></it></p>
+<p>so Task1 is reused, but everything in there is removed</p>
+<p>Once ActivityC is opened pressing back button takes user to ActivityB -&gt; Launcher</p>
+<p>another apprach, we can use:
+<code>Intent.FLAG_ACTIVITY_NEW_TASK or Intent.Intent.FLAG_ACTIVITY_CLEAR_TOP</code>
+this will give below situation:</p>
+<p>Task1: ActivityA(singleTask), ActivityC(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP),
+Task2: ActivityB (singleInstance) <it activitya="" from="" started="" was=""></it></p>
+<p>Once ActivityC is opened pressing back button takes user to <strong>ActivityA -&gt; ActivityB</strong></p>
+<p>// some chatGPT notes
+If you try to start the same Activity with different affinity and launchMode settings after the Activity has already
+been created with the SingleInstance launch mode, the behavior will depend on the specific settings you use. Here are a
+few possible scenarios:</p>
+<pre><code>If you try to start the Activity with the same affinity and launchMode settings as the original instance, the existing instance will be reused and no new instance will be created. This means that the Activity will continue to be a singleton, and will be shared by all tasks that need to use it.
+If you try to start the Activity with a different affinity but the same launchMode settings as the original instance, the existing instance will be reused, but it will be placed in a new task with the specified affinity. This means that the Activity will continue to be a singleton, but it will be part of a new task, and will be isolated from the other activities in that task.
+If you try to start the Activity with a different launchMode but the same affinity as the original instance, the existing instance will be reused, but its launchMode will be updated to the specified launchMode. This means that the Activity will no longer be a singleton, and may be launched multiple times within the context of the specified affinity.
+If you try to start the Activity with a different affinity and launchMode, a new instance of the Activity will be created, and it will be placed in a new task with the specified affinity and launchMode. This means that the Activity will no longer be a singleton, and will be part of a new task, with its own behavior and characteristics.
+</code></pre>
+<p>Overall, the specific behavior of the Activity in these scenarios will depend on the specific settings you use, and on
+the state of the original instance of the Activity. It is important to carefully consider these settings and their
+effects when starting an Activity in order to ensure that the Activity behaves as desired.</p>
+<p><a href="https://stackoverflow.com/a/14991341/5864033">StackOverflow link explaining it</a></p>
+<pre><code>android:launchMode="standard|singleTop|singleTask|singleInstance|singleInstancePerTask"
+</code></pre>
+<p><code>standard</code> - Default. The system always creates a new instance of the activity in the target task
+and routes the intent to it.</p>
+<p><code>singleTop</code> - If an instance of the activity already exists at the top of the target task, the system routes the intent
+to that instance through a call to its onNewIntent() method, rather than creating a new instance of the activity.
+<strong>ONLY ONE ACTIVITY AT THE TOP OF THE STACK OF PARTICULAR TASK</strong></p>
+<p><code>singleTask</code> - The system creates the activity at the root of a new task or locates the activity on an existing task
+with the same <strong>affinity</strong>. If an instance of the activity already exists <strong>and</strong> is at the root of the task, the system
+routes the intent to existing instance through a call to its onNewIntent() method, rather than creating a new instance.
+Meanwhile, all the other activities on top of it are <strong>destroyed</strong>.
+<strong>FIND EXISTING ACTIVITY WITH SAME AFFINITY IN THE TASK OR CREATE NEW TASK</strong></p>
+<p><code>singleInstance</code> - <strong>The activity is always the single and only member of its task.</strong>, beside Same as "singleTask",
+holding the instance. This can be useful for activities that require a unique, persistent state, such as a login screen
+or a settings
+page.</p>
+<p><code>singleInstancePerTask</code> - the first activity that
+created the task, and therefore there will only be one instance of this activity in a task; but activity can be
+instantiated multiple times in different tasks.</p>
+<p><strong>task</strong> - stack of activities</p>
+<p><strong>Start a task</strong>
+You can set up an activity as the entry point for a task by giving it an intent filter with "android.intent.action.MAIN"
+as the specified action and "android.intent.category.LAUNCHER" as the specified category. For example:</p>
+<pre><code>&lt;activity ... &gt;
+    &lt;intent-filter ... &gt;
+        &lt;action android:name="android.intent.action.MAIN" /&gt;
+        &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+    &lt;/intent-filter&gt;
+    ...
+&lt;/activity&gt;
+</code></pre>
+<p>if activity is launched with launchMode: singleTask, singleInstance, singleInstancePerTask it's important to note that
+the activity will <strong>only</strong> clear the stack of its own task.
+e.g.</p>
+<ul>
+<li>ActivityA, <code>launchMode:singleTask</code></li>
+<li>ActivityB, <code>launchMode:singleInstance</code></li>
+<li>ActivityC, <code>launchMode:standard</code></li>
+</ul>
+<p>each activity is started without additional flags as <code>startActivity()</code>
+note: if Activity is started as <code>startActivityForResult()</code> it belongs to the <strong>same task</strong> which started the activity.</p>
+<p>flow: <code>A-&gt;B-&gt;C</code>
+tasks [backstack]:</p>
+<ol>
+<li>[A]</li>
+<li>[B]</li>
+<li>[C]</li>
+</ol>
+<p>Each Activity will be in separate task, because ActivityB is forcing to be started as new task and as single element.
+Lyst Issue:
+The Stack of activities is cleared whenever we click on launcher. The problem is not affecting only
+<code>NativeCheckoutAcitivty</code>, but any activity that is opened from HomeActivity</p>
+<ol>
+<li><code>SplashActivity</code> is always started as <code>launchMode:SingleTask</code> -&gt; tapping on Launcher Icon will always clear the stack
+   of
+   activities above it, although in our case it’s not really an issue because it’s the only activity in this stack
+   anyway because <code>SplashActivitiy</code> always calls <code>finish()</code> when navigating somewhere + <code>HomeActivity</code> settings cause it
+   would
+   happen anyway if <code>finish()</code> wouldn’t be called.</li>
+<li><code>HomeActivity</code> is always started as <code>launchMode:SingleInstance</code> -&gt; tapping on Launcher Icon will always clear the
+   stack
+   of activities above <code>HomeActivity</code>, it is our case.
+   Because it is started as <code>SingleInstance</code> whenever we put app in the background and comeback new <code>SplashActivity</code> is
+   created which is opening <code>HomeActivity</code>, because the task for <code>HomeActivity</code> already exists, <code>HomeActivity</code> is
+   reopened with
+   clearing of the stack above.
+   With current approach it’s impossible to keep any other activity on TOP of <code>HomeActivity</code> when pressing launcher
+   icon.</li>
+</ol>
+<div class="mermaid">sequenceDiagram
+actor User
+participant HomeScreen
+participant SplashActivity
+participant HomeActivity
+participant NativeCheckoutActivity
+
+    User--&gt;&gt; HomeScreen: taps on icon launcher
+    rect rgb(200, 150, 255)
+        Note over SplashActivity: It runs in its own task
+        HomeScreen-&gt;&gt; SplashActivity: start(SINGLE_TASK)
+        SplashActivity -&gt;&gt; SplashActivity: finish()
+    end
+    rect rgb(0, 150, 255)
+        Note over HomeActivity: It runs in its own task*
+        SplashActivity-&gt;&gt; HomeActivity: start(singleInstance)
+        HomeActivity -&gt;&gt; NativeCheckoutActivity: startActivityForResult()
+    end 
+    NativeCheckoutActivity --&gt;&gt; HomeScreen: user taps on home button
+    User--&gt;&gt; HomeScreen: taps on icon launcher
+        rect rgb(200, 150, 255)
+        Note over SplashActivity: It runs in its own task
+        HomeScreen-&gt;&gt; SplashActivity: start(SINGLE_TASK)
+        SplashActivity -&gt;&gt; SplashActivity: finish()
+    end
+    rect rgb(0, 150, 255)
+        Note over HomeActivity: It runs in its own task
+        SplashActivity-&gt;&gt; HomeActivity: start(singleInstance)
+    end 
+</div>
+<div class="mermaid">flowchart LR
+
+subgraph SplashActivityStack1
+  direction TB
+  SplashActivity
+end
+
+subgraph HomeActivity1Stack
+  direction TB
+   NativeCheckoutActivity --- HomeActivity
+
+end
+
+subgraph SplashActivityStack2
+  direction TB
+  SplashActivity2
+end
+
+subgraph HomeActivity2Stack
+  direction TB
+  HomeActivity2 
+end
+
+
+
+SplashActivityStack1 --&gt; HomeActivity1Stack
+HomeActivity1Stack --&gt; SplashActivityStack2
+SplashActivityStack2 --&gt; HomeActivity2Stack
+HomeActivity2Stack --Missing--&gt; NativeCheckoutActivity2
+
+style SplashActivityStack1 fill:#c896ff
+style SplashActivityStack2 fill:#c896ff
+style HomeActivity1Stack fill:#0096ff
+style HomeActivity2Stack fill:#0096ff
+style NativeCheckoutActivity2 fill:#fcf5f5;stroke-width:2px,stroke-dasharray: 5 5,color:#F00,stroke:#f00
+</div>
+<p>Possible Solutions for fixing the issue require changes in architecture:
+Changing the launchModes:
+In our case the SplashActivity flag is not so important, it could be even SingleInstance and it would produce similar
+result (as we are always finishing this activity).
+To improve performance from Android12 probably it would be good to remove SpashActivity
+HomeActivity can’t keep launchMode:SingleInstance, as long as we will have it the stack above will be cleared.
+In reality, the task for NativeCheckout activity could potentially exist separately with some way of knowing that we
+need to navigate to it after coming back to app, but this solution looks too complicated - KISS.
+This solution is one recommended in Googles’ documentation.</p>
+<p>Making sure that HomeActivity is always at the top of the stack - which would mean that we shouldn’t have any navigation
+from HomeActivity that is an Activity (in practice, it means that each Activity should be replaced with Fragment).
+This might be easier to implement, but it would also require logic to show/hide the bottom navigation bar.</p>
+<p>In both cases, it requires at least medium effort to complete/fix the issue as not only we need to do the changes, but
+we need to make sure that we didn’t break anything. We would also need to do thorough testing of the whole app as
+regression is probable.</p>
+<p>On top of it:</p>
+<ul>
+<li>The <code>HomeActivity</code> is started as <code>singleInstance</code> which should in theory make sure that it will be the only member of
+  its task.
+  Though because <code>AccountActivity</code> and <code>NativeCheckoutActivity</code>  is started as <code>startActivityForResult()</code> it belongs to
+  the same task
+  as <code>HomeActivity</code></li>
+</ul>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../../third_party_library/" title="3rd Party library"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../UITesting/" title="UITesting">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span><a href="../../third_party_library/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../UITesting/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script>mermaid.initialize({});</script></body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>kotlin coroutines analogy - MojPalac</title>
+<link href="../../../css/theme.css" rel="stylesheet"/>
+<link href="../../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "kotlin coroutines analogy";
+        var mkdocs_page_input_path = "books/kotlin_coroutines/analogy.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../.."> MojPalac
+        </a><div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../..">MojPalac</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Books</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../android_programing_big_nerd_ranch/">Android Programming Big Nerd Ranch</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../pragmatic_programmer/">Pragmatic programmer</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../rozwoj_w_dwoch_jezykach/">Rozwoj w Dwoch jezykach</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">Kotlin coroutines</a>
+<ul class="current">
+<li class="toctree-l2 current"><a class="reference internal current" href="./">kotlin coroutines analogy</a>
+<ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="#coroutinecontext-coroutinescope-coroutine-jobs">CoroutineContext, CoroutineScope, Coroutine, Jobs</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cancel-all-coroutines">Cancel all coroutines</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#coroutine-cancels-itself">Coroutine cancels itself</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kotlin_coroutines/">Kotlin Coroutines Deep Dive</a>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Hobbies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../hobbies/pool/">Pool</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hobbies/tennis/">Grip</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Programming</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/architecture/">Architecture</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/ascii/">ASCII</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/c/">C</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/markdown/">Markdown</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/mkdocs/">MKDocs</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/notes/">Notes</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/solid/">SOLID principles</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/testing/">Unit Testing</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/third_party_library/">3rd Party library</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Android</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/android/AndroidManifest/">AndroidManifest.xml</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/android/UITesting/">UITesting</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/android/notes/">Notes</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/android/storage/">Storage</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/android/threading/">Threading</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/android/views/">Views</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Courses</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="#">Algorithms</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../programming/courses/algorithms/algorithms/">Princeton university algorithms part 1</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Kotlin</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/kotlin/coroutines/">Coroutines</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/kotlin/kotlin/">Kotlin</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Tools</a>
+<ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/tools/bugsnag/">Bugsnag</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/tools/git/">Git</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/tools/terminal/">Terminal comments</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../programming/tools/vim/">Vim</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#">SotiMobiControl</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../programming/tools/SotiMobiControl/SotiMobiControl/">Soti MobiControl</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Work</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/JustEatIdeas/">JustEatTakeaway Ideas</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/ReceiveOrderStructureRefactor/">Receive Order Structure</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/goals/">Goals</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../work/interviewQuestions/">Candidate questions</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../..">MojPalac</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../../.."></a> »</li>
+<li>Books »</li>
+<li>Kotlin coroutines »</li>
+<li class="breadcrumb-item active">kotlin coroutines analogy</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="kotlin-coroutines-analogy">kotlin coroutines analogy</h1>
+<h2 id="coroutinecontext-coroutinescope-coroutine-jobs">CoroutineContext, CoroutineScope, Coroutine, Jobs</h2>
+<p>Imagine you are the manager(CoroutineContext) of a restaurant(CoroutineScope). As the manager, you provide a specific
+set
+of rules and resources for your employees(coroutines) to work within the restaurant. These rules and resources
+collectively represent the CoroutineContext. For example, the restaurant's working hours, uniforms, cooking equipment,
+and the specific tasks employees can perform (like cooking, serving, cleaning) are part of the CoroutineContext.</p>
+<p>Every employee (coroutine) you hire in your restaurant is given a specific job assignment (analogous to a Job). Each job
+has a set of responsibilities and tasks that the employee needs to perform. For instance, the chef's job is to cook
+meals, the server's job is to deliver food to customers, and the cleaner's job is to keep the restaurant tidy.</p>
+<p>Now, let's see how they relate to each other and what happens when we cancel one Job:</p>
+<h2 id="cancel-all-coroutines">Cancel all coroutines</h2>
+<p>When you, as the manager, decide to close the restaurant (call cancel() on the CoroutineScope), here's what happens:</p>
+<pre><code>All the employees (coroutines) working in the restaurant (CoroutineScope) will be notified that the restaurant is closing (cancellation is requested).
+
+Each employee (coroutine) checks their job assignment (Job) and sees the notification of restaurant closure.
+
+The employees (coroutines) will stop working on their current tasks, clean up their workstations, and leave the restaurant.
+</code></pre>
+<h2 id="coroutine-cancels-itself">Coroutine cancels itself</h2>
+<p>Imagine, Each employee has a specific task (job) they are responsible for.</p>
+<pre><code>Chef (Coroutine A) - Responsible for cooking dishes.
+Server (Coroutine B) - Responsible for serving food to customers.
+</code></pre>
+<p>Now, let's say the Chef (Coroutine A) is cooking a dish in the kitchen when they notice a fire has broken out in the
+restaurant.
+Realizing the danger, the Chef immediately informs the manager (CoroutineContext), about the fire (cancellation propagates to the CoroutineContext).
+Manager in turn cancel all other employees' tasks (coroutines) within the restaurant (CoroutineScope).</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../../rozwoj_w_dwoch_jezykach/" title="Rozwoj w Dwoch jezykach"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../kotlin_coroutines/" title="Kotlin Coroutines Deep Dive">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span><a href="../../rozwoj_w_dwoch_jezykach/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../kotlin_coroutines/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../../..";</script>
+<script src="../../../js/theme_extra.js"></script>
+<script src="../../../js/theme.js"></script>
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+<script src="../../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+</body>
+</html>
